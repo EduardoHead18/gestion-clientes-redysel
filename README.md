@@ -1,4 +1,4 @@
-# Gestión de Clientes 
+# Gestión Redysel
 
 Una aplicación web para gestionar clientes, contratos, pagos e información relacionada. Construida con **Next.js**, **Prisma**, **MySQL** y **Tailwind CSS**.
 
