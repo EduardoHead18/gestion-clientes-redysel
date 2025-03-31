@@ -9,21 +9,17 @@ export const loginAuth = async (body: object) => {
     body: JSON.stringify(body),
   });
   const responseJson = await response.json();
-  return responseJson;
+  return { status: response.status, data: responseJson };
 };
 
 export const createEmployeeApi = async (body: IEmployee) => {
-  try {
-    const response = await fetch("/api/employee", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    const responseJson = await response.json();
-    return { status: response.status, data: responseJson };
-  } catch (error) {
-    console.error("Error en la solicitud:", error);
-  }
+  const response = await fetch("/api/employee", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const responseJson = await response.json();
+  return { status: response.status, data: responseJson };
 };

@@ -1,5 +1,5 @@
 "use client";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { set, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { AlertError } from "@/app/components/AlertError";
 import {
@@ -14,7 +14,7 @@ import {
 import { IEmployee } from "@/app/interfaces/interfaces";
 import { createEmployeeApi } from "@/app/services/services-api";
 import { AlertBadge } from "@/app/components/AlertBadge";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Auth() {
   const {
@@ -26,24 +26,21 @@ export default function Auth() {
   } = useForm<IEmployee>();
   const router = useRouter();
   const [errorBadge, setErrorBadge] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const onSubmit: SubmitHandler<IEmployee> = async (data) => {
     try {
       const response = await createEmployeeApi(data);
-      console.log("Estado de la respuesta:", response?.status);
       if (response?.status === 201) return router.push("/inicio/");
       if (response?.status === 409) {
-        console.log("error actived");
         setErrorBadge(true);
+        setErrorMessage(response?.data?.message);
       }
     } catch (error) {
-      console.error("Error al registrar:", error);
+      setErrorBadge(true);
+      setErrorMessage("Error al registrar el empleado");
     }
   };
-
-  useEffect(() => {
-    console.log("Estado de errorBadge cambió:", errorBadge);
-  }, [errorBadge]);
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen">
@@ -187,9 +184,7 @@ export default function Auth() {
           </div>
         </form>
 
-        {errorBadge && (
-          <AlertBadge message="El usuario ya existe, intenta con otro correo" />
-        )}
+        {errorBadge && <AlertBadge message={errorMessage} />}
       </div>
     </section>
   );

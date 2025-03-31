@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { loginAuth } from "@/app/services/services-api";
 import { useRouter } from "next/navigation";
 import { AlertError } from "@/app/components/AlertError";
+import { useState } from "react";
+import { AlertBadge } from "@/app/components/AlertBadge";
 export default function Auth() {
   const {
     register,
@@ -11,18 +13,24 @@ export default function Auth() {
   } = useForm();
 
   const router = useRouter();
+  const [authError, setAuthError] = useState<boolean>(false);
+  const [messageError, setMessageError] = useState<string>("");
 
   const onSubmit = async (data: any) => {
     try {
       const response = await loginAuth(data);
-      if (response.message === "User found") {
-        router.push("/home/");
-      } else {
-        alert(response.message);
+      if (response?.status === 200) router.push("/inicio/");
+      if (response?.status === 401) {
+        setAuthError(true);
+        setMessageError(response.data.message);
+      }
+      if (response?.status === 404) {
+        setAuthError(true);
+        setMessageError(response.data.message);
       }
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      alert("Ocurrió un error en el servidor.");
+      setAuthError(true);
+      setMessageError("Error en el servidor");
     }
   };
 
@@ -33,7 +41,7 @@ export default function Auth() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Email address
+              Correo
             </label>
             <input
               {...register("email", {
@@ -50,7 +58,7 @@ export default function Auth() {
           </div>
           <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Password
+              Contraseña
             </label>
             <input
               {...register("password", {
@@ -65,7 +73,7 @@ export default function Auth() {
             {errors.password?.message &&
               AlertError({ message: String(errors.password.message) })}
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-10">
             <button
               type="submit"
               className="items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -73,6 +81,10 @@ export default function Auth() {
               Iniciar sesión
             </button>
           </div>
+          {authError &&
+            AlertBadge({
+              message: messageError,
+            })}
         </form>
       </div>
     </section>

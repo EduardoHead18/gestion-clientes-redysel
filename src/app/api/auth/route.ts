@@ -26,9 +26,10 @@ export async function POST(req: NextRequest) {
       password,
       findEmployee.password
     );
+
     if (!isPasswordValid) {
       return NextResponse.json(
-        { message: "Contraseña incorrecta" },
+        { message: "Correo o contraseña incorrecta" },
         { status: 401 }
       );
     }
@@ -42,13 +43,11 @@ export async function POST(req: NextRequest) {
       TOKEN_SECRET,
       { expiresIn: "1h" }
     );
-
     return NextResponse.json(
       { message: "Inicio de sesión exitoso", token },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error en el servidor:", error);
     return NextResponse.json(
       { message: "Error en el servidor" },
       { status: 500 }

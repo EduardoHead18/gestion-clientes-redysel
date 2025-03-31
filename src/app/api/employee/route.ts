@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         email,
       },
     });
-    if(findUser) return NextResponse.json({message: 'El usuario ya esxiste'}, { status: 409 });
+    if(findUser) return NextResponse.json({message: 'El usuario ya existe'}, { status: 409 });
     const employee = await prisma.employees.create({
       data: {
         name,
