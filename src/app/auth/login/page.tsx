@@ -1,7 +1,8 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { loginAuth } from "@/app/services/fetchAuth";
+import { loginAuth } from "@/app/services/services-api";
 import { useRouter } from "next/navigation";
+import { AlertError } from "@/app/components/AlertError";
 export default function Auth() {
   const {
     register,
@@ -44,11 +45,8 @@ export default function Auth() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="email@gmail.com"
             />
-            {errors.email?.message && (
-              <p className="text-red-500 text-sm">
-                {String(errors.email.message)}
-              </p>
-            )}
+            {errors.email?.message &&
+              AlertError({ message: String(errors.email.message) })}
           </div>
           <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -64,11 +62,8 @@ export default function Auth() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="•••••••••"
             />
-            {errors.password?.message && (
-              <p className="text-red-500 text-sm">
-                {String(errors.password.message)}
-              </p>
-            )}
+            {errors.password?.message &&
+              AlertError({ message: String(errors.password.message) })}
           </div>
           <div className="flex justify-center">
             <button

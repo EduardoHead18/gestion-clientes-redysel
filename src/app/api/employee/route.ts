@@ -1,10 +1,11 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
-import { stat } from "fs";
+import bcrypt from "bcrypt";
+
 export async function GET() {
   try {
-    const employees = await prisma.employee.findMany();
+    const employees = await prisma.employees.findMany();
     return NextResponse.json(employees);
   } catch (error) {
     return NextResponse.json(
@@ -16,8 +17,27 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const employee = await prisma.employee.create({ data: body });
+    const { name, lastName, zone, role, email, password } = await req.json();
+
+    const passwordEncrypted = await bcrypt.hash(password, 10);
+
+    const findUser = await prisma.employees.findUnique({
+      where: {
+        email,
+      },
+    });
+    if(findUser) return NextResponse.json({message: 'El usuario ya esxiste'}, { status: 409 });
+    const employee = await prisma.employees.create({
+      data: {
+        name,
+        last_name: lastName,
+        role,
+        zone, 
+        email,
+        password: passwordEncrypted,
+      },
+    });
+
     return NextResponse.json(employee, { status: 201 });
   } catch (error) {
     return NextResponse.json({
