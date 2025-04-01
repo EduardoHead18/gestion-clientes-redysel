@@ -3,7 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 export async function GET() {
   try {
-    const clients = await prisma.clients.findMany();
+    const clients = await prisma.clients.findMany({
+      include:{
+        contracts: true,
+        payments:true
+      }
+    });
     return NextResponse.json(clients);
   } catch (error) {
     return NextResponse.json(
