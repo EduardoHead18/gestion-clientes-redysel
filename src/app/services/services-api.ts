@@ -13,7 +13,7 @@ export const loginAuth = async (body: object) => {
 };
 
 export const createEmployeeApi = async (body: IEmployee) => {
-  const response = await fetch("/api/employee", {
+  const response = await fetch("/api/employees", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const createEmployeeApi = async (body: IEmployee) => {
 };
 
 export const getAllClients = async () =>{
-  const response = await fetch ('api/client')
+  const response = await fetch ('api/clients')
   const responseJson = await response.json()
   return responseJson
 }
