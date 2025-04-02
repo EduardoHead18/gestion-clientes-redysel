@@ -5,6 +5,7 @@ import {
   IconBrandCashapp,
   IconList,
   IconSettings,
+  IconTransferOut,
   IconUsers,
 } from "@tabler/icons-react"
 
@@ -52,6 +53,11 @@ const data = {
       title: "Configuración",
       url: "#",
       icon: IconSettings,
+    },
+    {
+      title: "Cerrar sesión",
+      url: "#",
+      icon: IconTransferOut,
     },
   ]
 }
