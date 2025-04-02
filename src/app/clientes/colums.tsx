@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { IClients } from "../interfaces/interfaces";
 import { dateFormat, validateObject } from "../utils/tools";
 import { BadgeStatus } from "../components/BadgeStatus";
+import DropMenuComponent from "../components/DropMenuComponent";
 export const columns: ColumnDef<IClients>[] = [
   {
     accessorKey: "id",
@@ -45,7 +46,9 @@ export const columns: ColumnDef<IClients>[] = [
     header: "Estado de pago",
   },
   {
-    accessorKey: "acciones",
+    cell() {
+      return <DropMenuComponent />;
+    },
     header: "Acciones",
   },
 ];
