@@ -43,9 +43,6 @@ export async function POST(req: NextRequest) {
     const paymentMonth = parseInt(month, 10);
     const currentMonth = new Date().getMonth() + 1;
 
-    console.log("Mes del pago:", paymentMonth);
-    console.log("Mes actual:", currentMonth);
-
     if (paymentMonth !== currentMonth) {
       return NextResponse.json(
         { message: "El mes de la fecha de pago no coincide con el mes actual" },

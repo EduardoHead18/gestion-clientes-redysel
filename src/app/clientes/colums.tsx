@@ -37,7 +37,6 @@ export const columns: ColumnDef<IClients>[] = [
   {
     cell: ({ row }) => {
       const getPayment = validateObject({ data: row.original.payments });
-      console.log(getPayment);
       if (!getPayment) {
         return <BadgeStatus textMessage={"No pagado"} variant="destructive" />;
       }
