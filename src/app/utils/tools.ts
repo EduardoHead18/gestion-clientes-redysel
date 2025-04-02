@@ -1,3 +1,10 @@
+export const validateObject = ({ data }: { data: object }) => {
+  if (!data || Object.keys(data).length === 0) {
+    return false;
+  }
+  return true;
+};
+
 export const dateFormat = ({ date }: { date: string }) => {
   const dateObj = new Date(date);
 

@@ -27,6 +27,5 @@ export const createEmployeeApi = async (body: IEmployee) => {
 export const getAllClients = async () =>{
   const response = await fetch ('api/client')
   const responseJson = await response.json()
-  console.log(responseJson)
   return responseJson
 }

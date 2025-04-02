@@ -17,6 +17,7 @@ export interface IPayments {
   id: number;
   clientsId: IClients[];
   employeeId: IEmployee[];
+  paymentDate: string
   createdAt?: string;
 }
 
@@ -28,5 +29,6 @@ export interface IClients {
   zone: string;
   contracts: IContracts[];
   payment_date: string;
+  payments: IPayments[]
   createdAt: string;
 }

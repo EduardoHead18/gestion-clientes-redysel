@@ -2,9 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { IClients } from "../interfaces/interfaces";
-import { Contrast } from "lucide-react";
-import { dateFormat } from "../utils/date-format";
-
+import { dateFormat, validateObject } from "../utils/tools";
+import { BadgeStatus } from "../components/BadgeStatus";
 export const columns: ColumnDef<IClients>[] = [
   {
     accessorKey: "id",
@@ -36,7 +35,14 @@ export const columns: ColumnDef<IClients>[] = [
     header: "Fecha de pago",
   },
   {
-    accessorKey: "nothing",
+    cell: ({ row }) => {
+      const getPayment = validateObject({ data: row.original.payments });
+      console.log(getPayment);
+      if (!getPayment) {
+        return <BadgeStatus textMessage={"No pagado"} variant="destructive" />;
+      }
+      return <BadgeStatus textMessage={"Pagado"} variant="default" />;
+    },
     header: "Estado de pago",
   },
   {
