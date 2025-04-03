@@ -1,7 +1,7 @@
 "use client";
 import { set, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { AlertError } from "@/app/components/AlertError";
+import { AlertError } from "@/components/personalized/AlertError";
 import {
   Select,
   SelectContent,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { IEmployee } from "@/app/interfaces/interfaces";
 import { createEmployeeApi } from "@/app/services/services-api";
-import { AlertBadge } from "@/app/components/AlertBadge";
+import { AlertBadge } from "@/components/personalized/AlertBadge";
 import { useState } from "react";
 
 export default function Auth() {

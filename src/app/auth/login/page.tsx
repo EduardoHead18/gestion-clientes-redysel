@@ -2,9 +2,9 @@
 import { useForm } from "react-hook-form";
 import { loginAuth } from "@/app/services/services-api";
 import { useRouter } from "next/navigation";
-import { AlertError } from "@/app/components/AlertError";
+import { AlertError } from "@/components/personalized/AlertError";
 import { useState } from "react";
-import { AlertBadge } from "@/app/components/AlertBadge";
+import { AlertBadge } from "@/components/personalized/AlertBadge";
 export default function Auth() {
   const {
     register,

@@ -5,8 +5,8 @@ import { DataTable } from "./data-table";
 import { columns } from "./colums";
 import { IClients } from "../interfaces/interfaces";
 import { getAllClients } from "../services/services-api";
-import { SearchComponent } from "../components/SearchComponent";
-import { PaginationComponent } from "../components/PaginationComponent";
+import { SearchComponent } from "../../components/personalized/SearchComponent";
+import { PaginationComponent } from "../../components/personalized/PaginationComponent";
 import { useStorePagination } from "@/hooks/useStore";
 
 export default function ClientsPage() {
