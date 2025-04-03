@@ -10,7 +10,7 @@ import {
 import { useStorePagination } from "@/hooks/useStore";
 
 export const PaginationComponent = () => {
-  const { page, increasePage, decreasePage } = useStorePagination();
+  const { page, increasePage, decreasePage, reset } = useStorePagination();
 
   return (
     <>
@@ -23,7 +23,7 @@ export const PaginationComponent = () => {
             <PaginationLink href="#">{page}</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationEllipsis />
+            <PaginationEllipsis onClick={reset} href="#"/>
           </PaginationItem>
           <PaginationItem>
             <PaginationNext onClick={increasePage} href="#" />

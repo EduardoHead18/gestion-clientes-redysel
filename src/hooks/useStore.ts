@@ -4,6 +4,7 @@ interface CounterState {
   page: number;
   increasePage: () => void;
   decreasePage: () => void;
+  reset:() => void;
 }
 
 export const useStorePagination = create<CounterState>((set) => ({
@@ -13,4 +14,5 @@ export const useStorePagination = create<CounterState>((set) => ({
     set((state) => ({
       page: state.page > 1 ? state.page - 1 : 1,
     })),
+  reset: () => set({ page: 1})
 }));

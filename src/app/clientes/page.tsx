@@ -16,7 +16,7 @@ export default function ClientsPage() {
     const fetchData = async () => {
       const response = await getAllClients({
         page: page,
-        pageLimit: 10,
+        pageLimit: 20,
       });
       setClients(response.data);
       console.log("clientes", response.data);
