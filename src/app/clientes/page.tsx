@@ -13,7 +13,7 @@ export default function ClientsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllClients();
+      const response = await getAllClients({page: 1, pageLimit: 10});
       setClients(response);
     };
 

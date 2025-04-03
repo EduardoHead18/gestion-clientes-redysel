@@ -30,14 +30,14 @@ export const columns: ColumnDef<IClients>[] = [
   {
     accessorKey: "payment_date",
     cell: ({ row }) => {
-      const dateFormatted = dateFormat({ date: row.original.payment_date });
+      const dateFormatted = dateFormat(row.original.payment_date);
       return dateFormatted;
     },
     header: "Fecha de pago",
   },
   {
     cell: ({ row }) => {
-      const getPayment = validateObject({ data: row.original.payments });
+      const getPayment = validateObject(row.original.payments);
       if (!getPayment) {
         return <BadgeStatus textMessage={"No pagado"} variant="destructive" />;
       }
