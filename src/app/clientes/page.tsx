@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "./data-table";
 import { columns } from "./colums";
-import { IClients } from "../interfaces/interfaces";
+import { IClients } from "../../interfaces/interfaces";
 import { getAllClients } from "../services/services-api";
 import { SearchComponent } from "../../components/personalized/SearchComponent";
 import { PaginationComponent } from "../../components/personalized/PaginationComponent";

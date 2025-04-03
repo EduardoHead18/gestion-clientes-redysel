@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IEmployee } from "@/app/interfaces/interfaces";
-import { createEmployeeApi } from "@/app/services/services-api";
+import { IEmployee } from "@/interfaces/interfaces";
+import { createEmployeeApi } from "@/services/services-api";
 import { AlertBadge } from "@/components/personalized/AlertBadge";
 import { useState } from "react";
 
