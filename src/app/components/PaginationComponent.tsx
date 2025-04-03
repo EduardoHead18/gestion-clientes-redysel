@@ -7,23 +7,26 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useStorePagination } from "@/hooks/useStore";
 
 export const PaginationComponent = () => {
+  const { page, increasePage, decreasePage } = useStorePagination();
+
   return (
     <>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <PaginationPrevious onClick={decreasePage} href="#" />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
+            <PaginationLink href="#">{page}</PaginationLink>
           </PaginationItem>
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href="#" />
+            <PaginationNext onClick={increasePage} href="#" />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

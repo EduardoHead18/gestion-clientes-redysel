@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
           payments: true,
         },
       });
-      return NextResponse.json(clients);
+      return NextResponse.json({ data: clients }, { status: 200 });
     }
 
     if (searchParam) {

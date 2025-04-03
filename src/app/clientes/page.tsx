@@ -7,18 +7,23 @@ import { IClients } from "../interfaces/interfaces";
 import { getAllClients } from "../services/services-api";
 import { SearchComponent } from "../components/SearchComponent";
 import { PaginationComponent } from "../components/PaginationComponent";
+import { useStorePagination } from "@/hooks/useStore";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
+  const { page } = useStorePagination();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllClients({page: 1, pageLimit: 10});
+      const response = await getAllClients({
+        page: page,
+        pageLimit: 10,
+      });
       setClients(response);
     };
 
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <div className="container mx-auto px-10">
