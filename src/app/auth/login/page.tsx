@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { loginAuth } from "@/app/services/services-api";
+import { loginAuth } from "@/services/services-api";
 import { useRouter } from "next/navigation";
 import { AlertError } from "@/components/personalized/AlertError";
 import { useState } from "react";

@@ -17,18 +17,19 @@ export interface IPayments {
   id: number;
   clientsId: IClients[];
   employeeId: IEmployee[];
-  paymentDate: string
+  paymentDate: string;
   createdAt?: string;
 }
 
 export interface IClients {
   id: number;
   name: string;
-  lastName: string;
+  last_name: string;
   ip_address_id: number;
   zone: string;
   contracts: IContracts[];
+  active: boolean;
   payment_date: string;
-  payments: IPayments[]
+  payments: IPayments[];
   createdAt: string;
 }

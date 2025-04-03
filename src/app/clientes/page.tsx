@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "./data-table";
 import { columns } from "./colums";
 import { IClients } from "../../interfaces/interfaces";
-import { getAllClients } from "../services/services-api";
+import { getAllClients } from "@/services/services-api";
 import { SearchComponent } from "../../components/personalized/SearchComponent";
 import { PaginationComponent } from "../../components/personalized/PaginationComponent";
 import { useStorePagination } from "@/hooks/useStore";
@@ -12,14 +12,14 @@ import { useStorePagination } from "@/hooks/useStore";
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
   const { page } = useStorePagination();
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await getAllClients({
         page: page,
         pageLimit: 10,
       });
-      setClients(response);
+      setClients(response.data);
+      console.log("clientes", response.data);
     };
 
     fetchData();

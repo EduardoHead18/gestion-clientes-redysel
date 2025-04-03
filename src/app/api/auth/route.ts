@@ -8,9 +8,8 @@ import bcrypt from "bcrypt";
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "default_secret";
 
 export async function POST(req: NextRequest) {
-  const { email, password } = await req.json();
-
   try {
+    const { email, password } = await req.json();
     const findEmployee = await prisma.employees.findFirst({
       where: { email },
     });

@@ -1,37 +1,46 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
-import {
-  createClient,
-  deleteClientImplement,
-  getClientsImplementation,
-} from "../implementation/clients-implementation";
-export async function GET(req: NextRequest) {
-  try {
-    //get all params for the filter and pagination
-    const { searchParams } = new URL(req.url);
-    const dataObjectTransfer = {
-      typeParam: searchParams.get("type") || undefined,
-      searchParam: searchParams.get("search") || undefined,
-      page: parseInt(searchParams.get("page") || "1", 10),
-      pageLimit: parseInt(searchParams.get("pageLimit") || "10", 10),
-    };
+import { Prisma } from "@prisma/client";
 
-    const result = await getClientsImplementation(dataObjectTransfer);
-    return NextResponse.json({ data: result }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch clients" },
-      { status: 500 }
-    );
-  }
+interface IGetClients {
+  typeParam?: string | null;
+  searchParam?: string | null;
+  page?: number;
+  pageLimit?: number;
 }
 
-export async function POST(request: NextRequest) {
+export async function getClientsImplementation(data: IGetClients) {
+  const { searchParam, typeParam } = data;
+  const page = data.page ?? 1;
+  const pageLimit = data.pageLimit ?? 10;
+
+  if (searchParam) {
+    return await searchClient(searchParam);
+  }
+
+  if (typeParam === "clients") {
+    const skip = (page - 1) * pageLimit;
+
+    const clients = await prisma.clients.findMany({
+      skip,
+      take: pageLimit,
+      include: {
+        contracts: true,
+        payments: true,
+      },
+    });
+
+    return { data: clients };
+  }
+
+  return { error: "Invalid request parameters" };
+}
+
+export async function createClient(data: Prisma.ClientsCreateInput) {
   try {
-    const data = await request.json();
-    const result = await createClient(data);
-    return NextResponse.json({ data: result }, { status: 201 });
+    const client = await prisma.clients.create({ data });
+    return NextResponse.json(client, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to create client" },
@@ -40,19 +49,30 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
-  try {
-    const searchParam = request.nextUrl.searchParams;
-    const id = parseInt(searchParam.get("id") || "0", 10);
-    console.log(id);
-    const result = await deleteClientImplement(id);
-    return result;
-  } catch (error) {
+export async function deleteClientImplement(id: number) {
+  if (!id) {
     return NextResponse.json(
-      { error: "Falló al eliminar el cliente" },
-      { status: 500 }
+      { error: "Client ID is required" },
+      { status: 400 }
     );
   }
+
+  const result = await prisma.clients.findUnique({
+    where: { id },
+  });
+  console.log(result);
+
+  if (!result) {
+    return NextResponse.json(
+      { error: "Cliente no encontrado" },
+      { status: 404 }
+    );
+  }
+
+  await prisma.clients.delete({
+    where: { id },
+  });
+  return NextResponse.json({ message: "Cliente eliminado" }, { status: 200 });
 }
 
 export const updateClient = async (request: NextRequest) => {
