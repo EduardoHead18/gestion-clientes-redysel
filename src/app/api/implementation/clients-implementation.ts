@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 import { Prisma } from "@prisma/client";
+import { error } from "console";
 
 interface IGetClients {
   typeParam?: string | null;
@@ -14,27 +15,34 @@ export async function getClientsImplementation(data: IGetClients) {
   const { searchParam, typeParam } = data;
   const page = data.page ?? 1;
   const pageLimit = data.pageLimit ?? 10;
-
-  if (searchParam) {
-    return await searchClient(searchParam);
-  }
-
   if (typeParam === "clients") {
     const skip = (page - 1) * pageLimit;
 
     const clients = await prisma.clients.findMany({
       skip,
       take: pageLimit,
+      where: {
+        OR: [
+          { name: { contains: searchParam || undefined } },
+          { last_name: { contains: searchParam || undefined } },
+        ],
+      },
       include: {
         contracts: true,
         payments: true,
       },
     });
 
-    return { data: clients };
-  }
+    if (clients.length === 0) {
+      return NextResponse.json(
+        { data: "No se encontro registros" },
+        { status: 404 }
+      );
+    }
 
-  return { error: "Invalid request parameters" };
+    return NextResponse.json({ data: clients }, { status: 200 });
+  }
+  return NextResponse.json("error", { status: 400 });
 }
 
 export async function createClient(data: Prisma.ClientsCreateInput) {
@@ -107,41 +115,3 @@ export const updateClient = async (request: NextRequest) => {
     );
   }
 };
-
-export async function searchClient(searchParam: string) {
-  try {
-    const clientsFind = await prisma.clients.findMany({
-      where: {
-        name: {
-          contains: searchParam,
-        },
-        last_name: {
-          contains: searchParam,
-        },
-      },
-      include: {
-        contracts: true,
-        payments: true,
-      },
-    });
-
-    if (clientsFind.length == 0) {
-      return NextResponse.json(
-        { message: "No se encontraron resultados" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        data: clientsFind,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch clients" },
-      { status: 500 }
-    );
-  }
-}

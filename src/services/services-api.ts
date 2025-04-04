@@ -35,5 +35,5 @@ export const getAllClients = async ({
     `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}`
   );
   const responseJson = await response.json();
-  return responseJson.data;
+  return responseJson;
 };

@@ -14,12 +14,15 @@ export default function ClientsPage() {
   const { page } = useStorePagination();
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllClients({
-        page: page,
-        pageLimit: 20,
-      });
-      setClients(response.data);
-      console.log("clientes", response.data);
+      try {
+        const response = await getAllClients({
+          page: page,
+          pageLimit: 20,
+        });
+        setClients(response.data);
+      } catch (error) {
+        console.log("error:", error);
+      }
     };
 
     fetchData();

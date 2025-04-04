@@ -11,14 +11,13 @@ export async function GET(req: NextRequest) {
     //get all params for the filter and pagination
     const { searchParams } = new URL(req.url);
     const dataObjectTransfer = {
-      typeParam: searchParams.get("type") || undefined,
-      searchParam: searchParams.get("search") || undefined,
+      typeParam: searchParams.get("type"),
+      searchParam: searchParams.get("search"),
       page: parseInt(searchParams.get("page") || "1", 10),
       pageLimit: parseInt(searchParams.get("pageLimit") || "10", 10),
     };
-
     const result = await getClientsImplementation(dataObjectTransfer);
-    return NextResponse.json({ data: result }, { status: 200 });
+    return result;
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch clients" },
@@ -87,41 +86,3 @@ export const updateClient = async (request: NextRequest) => {
     );
   }
 };
-
-export async function searchClient(searchParam: string) {
-  try {
-    const clientsFind = await prisma.clients.findMany({
-      where: {
-        name: {
-          contains: searchParam,
-        },
-        last_name: {
-          contains: searchParam,
-        },
-      },
-      include: {
-        contracts: true,
-        payments: true,
-      },
-    });
-
-    if (clientsFind.length == 0) {
-      return NextResponse.json(
-        { message: "No se encontraron resultados" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        data: clientsFind,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch clients" },
-      { status: 500 }
-    );
-  }
-}
