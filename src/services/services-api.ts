@@ -1,4 +1,4 @@
-import { IEmployee } from "../interfaces/interfaces";
+import { IClients, IEmployee } from "../interfaces/interfaces";
 
 export const loginAuth = async (body: object) => {
   const response = await fetch("/api/auth", {
@@ -38,8 +38,8 @@ export const getAllClients = async ({
   const response = await fetch(
     `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`
   );
-  const responseJson = await response.json();
-  return responseJson;
+  const responseJson: { data: IClients } = await response.json();
+  return responseJson.data;
 };
 
 export const deleteClient = async (id: number) => {

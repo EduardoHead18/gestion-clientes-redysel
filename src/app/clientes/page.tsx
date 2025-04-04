@@ -21,7 +21,8 @@ export default function ClientsPage() {
           pageLimit: 20,
           search: search,
         });
-        setClients(response.data);
+        if (!Array.isArray(response)) setClients([]);
+        else setClients(response);
       } catch (error) {
         console.error("error:", error);
       }
@@ -36,7 +37,6 @@ export default function ClientsPage() {
         <SearchComponent />
         <PaginationComponent />
       </div>
-
       <DataTable columns={columns} data={clients} />
     </div>
   );
