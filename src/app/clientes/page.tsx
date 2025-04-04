@@ -11,8 +11,8 @@ import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
-  const { page } = useStorePagination();
-  const { search } = useStoreSearch()
+  const { page, refresh } = useStorePagination();
+  const { search } = useStoreSearch();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,7 +28,7 @@ export default function ClientsPage() {
     };
 
     fetchData();
-  }, [page, search]);
+  }, [page, search, refresh]);
 
   return (
     <div className="container mx-auto px-10">
@@ -36,6 +36,7 @@ export default function ClientsPage() {
         <SearchComponent />
         <PaginationComponent />
       </div>
+
       <DataTable columns={columns} data={clients} />
     </div>
   );

@@ -24,20 +24,28 @@ export const createEmployeeApi = async (body: IEmployee) => {
   return { status: response.status, data: responseJson };
 };
 
-export const getAllClients = async ({
-  page,
-  pageLimit,
-  search
-}: {
+interface IClientsParams {
   page: number;
   pageLimit: number;
   search: string;
-}) => {
+}
+
+export const getAllClients = async ({
+  page,
+  pageLimit,
+  search,
+}: IClientsParams) => {
   const response = await fetch(
-    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`,
+    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`
   );
   const responseJson = await response.json();
   return responseJson;
 };
 
-
+export const deleteClient = async (id: number) => {
+  const response = await fetch(`/api/clients?id=${id}`, {
+    method: "DELETE",
+  });
+  const responseJson = await response.json();
+  return { status: response.status, data: responseJson };
+};

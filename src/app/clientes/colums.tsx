@@ -46,8 +46,9 @@ export const columns: ColumnDef<IClients>[] = [
     header: "Estado de pago",
   },
   {
-    cell() {
-      return <DropMenuComponent />;
+    cell({ row }) {
+      const clientId = row.original.id;
+      return <DropMenuComponent id={clientId} />;
     },
     header: "Acciones",
   },
