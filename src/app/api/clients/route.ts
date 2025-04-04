@@ -43,7 +43,6 @@ export async function DELETE(request: NextRequest) {
   try {
     const searchParam = request.nextUrl.searchParams;
     const id = parseInt(searchParam.get("id") || "0", 10);
-    console.log(id);
     const result = await deleteClientImplement(id);
     return result;
   } catch (error) {

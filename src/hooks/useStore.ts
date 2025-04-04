@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { create } from "zustand";
 
 interface CounterState {
@@ -5,6 +6,11 @@ interface CounterState {
   increasePage: () => void;
   decreasePage: () => void;
   reset:() => void;
+}
+
+interface SearchState {
+  search: string;
+  setSearch: (value: string) => void;
 }
 
 export const useStorePagination = create<CounterState>((set) => ({
@@ -15,4 +21,9 @@ export const useStorePagination = create<CounterState>((set) => ({
       page: state.page > 1 ? state.page - 1 : 1,
     })),
   reset: () => set({ page: 1})
+}));
+
+export const useStoreSearch = create<SearchState>((set) => ({
+  search: "",
+  setSearch: (value) => set({ search: value }),
 }));

@@ -27,13 +27,17 @@ export const createEmployeeApi = async (body: IEmployee) => {
 export const getAllClients = async ({
   page,
   pageLimit,
+  search
 }: {
   page: number;
   pageLimit: number;
+  search: string;
 }) => {
   const response = await fetch(
-    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}`
+    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`,
   );
   const responseJson = await response.json();
   return responseJson;
 };
+
+

@@ -2,7 +2,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 import { Prisma } from "@prisma/client";
-import { error } from "console";
 
 interface IGetClients {
   typeParam?: string | null;
@@ -17,6 +16,23 @@ export async function getClientsImplementation(data: IGetClients) {
   const pageLimit = data.pageLimit ?? 10;
   if (typeParam === "clients") {
     const skip = (page - 1) * pageLimit;
+
+    if (
+      searchParam === "" ||
+      searchParam === undefined ||
+      searchParam === null
+    ) {
+      const clients = await prisma.clients.findMany({
+        skip,
+        take: pageLimit,
+        include: {
+          contracts: true,
+          payments: true,
+        },
+      });
+
+      return NextResponse.json({ data: clients }, { status: 200 });
+    }
 
     const clients = await prisma.clients.findMany({
       skip,
@@ -68,7 +84,6 @@ export async function deleteClientImplement(id: number) {
   const result = await prisma.clients.findUnique({
     where: { id },
   });
-  console.log(result);
 
   if (!result) {
     return NextResponse.json(

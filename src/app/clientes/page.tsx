@@ -7,26 +7,28 @@ import { IClients } from "../../interfaces/interfaces";
 import { getAllClients } from "@/services/services-api";
 import { SearchComponent } from "../../components/personalized/SearchComponent";
 import { PaginationComponent } from "../../components/personalized/PaginationComponent";
-import { useStorePagination } from "@/hooks/useStore";
+import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
   const { page } = useStorePagination();
+  const { search } = useStoreSearch()
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getAllClients({
           page: page,
           pageLimit: 20,
+          search: search,
         });
         setClients(response.data);
       } catch (error) {
-        console.log("error:", error);
+        console.error("error:", error);
       }
     };
 
     fetchData();
-  }, [page]);
+  }, [page, search]);
 
   return (
     <div className="container mx-auto px-10">

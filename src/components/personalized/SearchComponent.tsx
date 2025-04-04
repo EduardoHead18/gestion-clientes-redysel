@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { SearchIcon } from "lucide-react";
+import { useStoreSearch } from "@/hooks/useStore";
 
 export const SearchComponent = () => {
-  const [search, setSearch] = useState("");
+  const { search, setSearch } = useStoreSearch();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
