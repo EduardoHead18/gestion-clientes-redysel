@@ -2,16 +2,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 import { Prisma } from "@prisma/client";
+import { decodeToken } from "../utils/tools";
 
 interface IGetClients {
   typeParam?: string | null;
   searchParam?: string | null;
   page?: number;
   pageLimit?: number;
+  tokenHeader?: string | null;
 }
 
 export async function getClientsImplementation(data: IGetClients) {
-  const { searchParam, typeParam } = data;
+  const { searchParam, typeParam, tokenHeader } = data;
+  // Check if the token is valid
+  const responseDecodeToken = decodeToken(tokenHeader!);
+  if (!responseDecodeToken || typeof responseDecodeToken !== "object") {
+    return NextResponse.json({ error: "Token no válido" }, { status: 401 });
+  }
+
   const page = data.page ?? 1;
   const pageLimit = data.pageLimit ?? 10;
   if (typeParam === "clients") {
@@ -65,7 +73,7 @@ export async function createClient(data: Prisma.ClientsCreateInput) {
   try {
     const client = await prisma.clients.create({ data });
     return NextResponse.json(client, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to create client" },
       { status: 400 }
@@ -123,7 +131,7 @@ export const updateClient = async (request: NextRequest) => {
       { message: "Client updated successfully", client: updatedClient },
       { status: 200 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to update client" },
       { status: 500 }

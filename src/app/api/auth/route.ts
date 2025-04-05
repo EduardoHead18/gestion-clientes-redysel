@@ -10,6 +10,7 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET || "default_secret";
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
+
     const findEmployee = await prisma.employees.findFirst({
       where: { email },
     });
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
         id: findEmployee.id,
         email: findEmployee.email,
         role: findEmployee.role,
+        zone: findEmployee.zone,
       },
       TOKEN_SECRET,
       { expiresIn: "1h" }
@@ -46,7 +48,7 @@ export async function POST(req: NextRequest) {
       { message: "Inicio de sesión exitoso", token },
       { status: 200 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: "Error en el servidor" },
       { status: 500 }

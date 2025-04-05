@@ -36,7 +36,7 @@ export default function Auth() {
         setErrorBadge(true);
         setErrorMessage(response?.data?.message);
       }
-    } catch (error) {
+    } catch {
       setErrorBadge(true);
       setErrorMessage("Error al registrar el empleado");
     }
@@ -164,7 +164,7 @@ export default function Auth() {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Zonas</SelectLabel>
-                    <SelectItem value="ocosing">Ocosingo</SelectItem>
+                    <SelectItem value="ocosingo">Ocosingo</SelectItem>
                     <SelectItem value="chilon">Chilon</SelectItem>
                     <SelectItem value="yajalon">Yajalon</SelectItem>
                   </SelectGroup>

@@ -16,7 +16,7 @@ export default function Auth() {
   const [authError, setAuthError] = useState<boolean>(false);
   const [messageError, setMessageError] = useState<string>("");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: object) => {
     try {
       const response = await loginAuth(data);
       if (response?.status === 200) router.push("/inicio/");
@@ -28,7 +28,7 @@ export default function Auth() {
         setAuthError(true);
         setMessageError(response.data.message);
       }
-    } catch (error) {
+    } catch {
       setAuthError(true);
       setMessageError("Error en el servidor");
     }
