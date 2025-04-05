@@ -8,11 +8,13 @@ import { getAllClients } from "@/services/services-api";
 import { SearchComponent } from "../../components/personalized/SearchComponent";
 import { PaginationComponent } from "../../components/personalized/PaginationComponent";
 import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
+import { useStoreToken } from "@/hooks/useStore";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
   const { page, refresh } = useStorePagination();
   const { search } = useStoreSearch();
+  const { token } = useStoreToken();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,6 +22,7 @@ export default function ClientsPage() {
           page: page,
           pageLimit: 20,
           search: search,
+          token: token,
         });
         if (!Array.isArray(response)) setClients([]);
         else setClients(response);

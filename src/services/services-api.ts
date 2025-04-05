@@ -28,15 +28,24 @@ interface IClientsParams {
   page: number;
   pageLimit: number;
   search: string;
+  token: string;
 }
 
 export const getAllClients = async ({
   page,
   pageLimit,
   search,
+  token,
 }: IClientsParams) => {
   const response = await fetch(
-    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`
+    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   const responseJson: { data: IClients } = await response.json();
   return responseJson.data;

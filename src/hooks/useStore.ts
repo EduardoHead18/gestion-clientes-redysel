@@ -9,9 +9,14 @@ interface IPagination {
   refreshFunction: () => void;
 }
 
-interface SearchState {
+interface ISearchState {
   search: string;
   setSearch: (value: string) => void;
+}
+
+export interface IToken {
+  token: string;
+  setToken: (token: string) => void;
 }
 
 export const useStorePagination = create<IPagination>((set) => ({
@@ -26,7 +31,12 @@ export const useStorePagination = create<IPagination>((set) => ({
   refreshFunction: () => set((state) => ({ refresh: !state.refresh })),
 }));
 
-export const useStoreSearch = create<SearchState>((set) => ({
+export const useStoreSearch = create<ISearchState>((set) => ({
   search: "",
   setSearch: (value) => set({ search: value }),
+}));
+
+export const useStoreToken = create<IToken>((set) => ({
+  token: "",
+  setToken: (token: string) => set({ token }),
 }));
