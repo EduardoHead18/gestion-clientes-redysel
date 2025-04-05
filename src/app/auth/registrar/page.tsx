@@ -15,6 +15,8 @@ import { IEmployee } from "@/interfaces/interfaces";
 import { createEmployeeApi } from "@/services/services-api";
 import { AlertBadge } from "@/components/personalized/AlertBadge";
 import { useState } from "react";
+import { useStoreToken } from "@/hooks/useStore";
+import NotFound from "@/app/not-found";
 
 export default function Auth() {
   const {
@@ -27,6 +29,7 @@ export default function Auth() {
   const router = useRouter();
   const [errorBadge, setErrorBadge] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const { token } = useStoreToken();
 
   const onSubmit: SubmitHandler<IEmployee> = async (data) => {
     try {
@@ -42,7 +45,9 @@ export default function Auth() {
     }
   };
 
-  return (
+  return !token ? (
+    <NotFound></NotFound>
+  ) : (
     <section className="flex flex-col items-center justify-center min-h-screen">
       <div className="bg-gray-50 p-10 rounded-lg shadow-sm w-full max-w-2xl ">
         <h1 className="text-center lg:text-2xl font-bold mb-10">
