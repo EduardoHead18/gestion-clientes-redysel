@@ -26,6 +26,7 @@ export default function Auth() {
         router.push("/inicio");
       }
       if (response?.status === 401) {
+        setMessageError(response.data.message);
         setAuthError(true);
       }
       if (response?.status === 404) {
@@ -40,7 +41,7 @@ export default function Auth() {
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen">
-      <div className="bg-gray-50 p-10 rounded-lg shadow-sm w-full sm:w-96">
+      <div className="p-10 rounded-lg shadow-sm w-full sm:w-96">
         <h1 className="lg:text-2xl font-bold mb-10">Iniciar sesión</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
@@ -80,7 +81,7 @@ export default function Auth() {
           <div className="flex justify-center mb-10">
             <button
               type="submit"
-              className="items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="items-center text-white bg-blue-700 hover:bg-blue-800 cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Iniciar sesión
             </button>
