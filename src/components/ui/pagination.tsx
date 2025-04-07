@@ -2,10 +2,9 @@ import * as React from "react"
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  MoreHorizontalIcon,
 } from "lucide-react"
 import {
-  IconHome
+  IconRefresh
 } from "@tabler/icons-react"
 
 import { cn } from "@/lib/utils"
@@ -113,7 +112,7 @@ function PaginationEllipsis({
       className={cn("flex size-9 items-center justify-center", className)}
       {...props}
     >
-      <IconHome size={4} className="size-4" />
+      <IconRefresh size={4} className="size-4" />
       <span className="sr-only">More pages</span>
     </PaginationLink>
   )
