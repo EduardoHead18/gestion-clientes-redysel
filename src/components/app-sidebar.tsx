@@ -32,8 +32,8 @@ const data = {
   },
   navMain: [
     {
-      title: "Clientes",
-      url: "/clientes/",
+      title: "Clientes temporales",
+      url: "/clientes-temporales/",
       icon: IconUsers,
     },
     {
