@@ -11,8 +11,8 @@ export async function getClientsTempImplementation() {
 export async function createClientTempImplementation(
   data: Prisma.ClientsTemporaryCreateInput
 ) {
-  const result = prisma.clientsTemporary.create({ data });
-  return NextResponse.json({ data: result }, { status: 200 });
+  const result = await prisma.clientsTemporary.create({ data });
+  return NextResponse.json({ data: result }, { status: 201 });
 }
 
 export async function getClientTempByIdImplementation(id: number) {

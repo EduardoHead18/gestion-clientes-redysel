@@ -21,6 +21,16 @@ export interface IPayments {
   createdAt?: string;
 }
 
+export interface ITemporaryClient {
+  id: number;
+  name: string;
+  last_name: string;
+  phone_number: string;
+  zone: string;
+  payment_date: Date;
+  active: boolean;
+}
+
 export interface IClients {
   id: number;
   name: string;

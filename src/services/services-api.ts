@@ -1,4 +1,4 @@
-import { IClients, IEmployee } from "../interfaces/interfaces";
+import { IClients, IEmployee, ITemporaryClient } from "../interfaces/interfaces";
 
 export const loginAuth = async (body: object) => {
   const response = await fetch("/api/auth", {
@@ -57,4 +57,15 @@ export const deleteClient = async (id: number) => {
   });
   const responseJson = await response.json();
   return { status: response.status, data: responseJson };
+};
+export const createTemporaryClient = async (data: ITemporaryClient) => {
+  const response = await fetch("/api/clients-temporary", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data)
+  });
+  const responseJson = await response.json();
+  return { status: response.status, data:responseJson.data};
 };

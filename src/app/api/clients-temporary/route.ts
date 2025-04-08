@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
 
     const result = await createClientTempImplementation(data);
-    return NextResponse.json({ data: result }, { status: 200 });
+    console.log(result)
+    return result;
   } catch (error) {
     return NextResponse.json(
       { error: `Failed to create client ${error}` },
