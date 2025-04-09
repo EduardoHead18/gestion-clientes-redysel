@@ -1,10 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { IClients } from "../../interfaces/interfaces";
+import { ITemporaryClient } from "../../interfaces/interfaces";
 import { dateFormat } from "../../utils/tools";
-import DropMenuComponent from "../../components/personalized/DropMenuComponent";
-export const columns: ColumnDef<IClients>[] = [
+import { ButtonComponent } from "@/components/personalized/ButtonComponent";
+export const columns: ColumnDef<ITemporaryClient>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -17,15 +17,14 @@ export const columns: ColumnDef<IClients>[] = [
     accessorKey: "last_name",
     header: "Apellidos",
   },
-  
+
   {
-    cell: ({ row }) => {
-      const contracts = row.original.contracts;
-      return contracts?.length > 0
-        ? `$${contracts[0].service}`
-        : "Sin servicio";
-    },
-    header: "Servicio",
+    accessorKey: "phone_number",
+    header: "Numero de telefono",
+  },
+  {
+    accessorKey: "zone",
+    header: "zona",
   },
   {
     accessorKey: "payment_date",
@@ -36,13 +35,9 @@ export const columns: ColumnDef<IClients>[] = [
     header: "Fecha de pago",
   },
   {
-    accessorKey:'active',
-    header: "Estado del cliente",
-  },
-  {
     cell({ row }) {
       const clientId = row.original.id;
-      return <DropMenuComponent id={clientId} />;
+      return <ButtonComponent text={'Crear contrato'} id={clientId} />;
     },
     header: "Acciones",
   },

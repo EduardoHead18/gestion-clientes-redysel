@@ -11,6 +11,7 @@ export default function LayoutHome({
   children: React.ReactNode;
 }>) {
   const { token } = useStoreToken();
+  //const token = true;
   return token ? (
     <SidebarProvider>
       <AppSidebar variant="inset" />

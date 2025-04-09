@@ -2,8 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 import {
-  createClient,
-  deleteClientImplement,
+  createClientImplementation,
+  deleteClientImplementation,
   getClientsImplementation,
 } from "../implementation/clients-implementation";
 export async function GET(req: NextRequest) {
@@ -32,12 +32,12 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    const result = await createClient(data);
-    return NextResponse.json({ data: result }, { status: 201 });
-  } catch {
+    const result = await createClientImplementation(data);
+    return result;
+  } catch (error) {
     return NextResponse.json(
-      { error: "Failed to create client" },
-      { status: 400 }
+      { message: "Failed to create client", info: error },
+      { status: 500 }
     );
   }
 }
@@ -46,7 +46,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const searchParam = request.nextUrl.searchParams;
     const id = parseInt(searchParam.get("id") || "0", 10);
-    const result = await deleteClientImplement(id);
+    const result = await deleteClientImplementation(id);
     return result;
   } catch {
     return NextResponse.json(
@@ -55,6 +55,7 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+
 
 export const updateClient = async (request: NextRequest) => {
   try {

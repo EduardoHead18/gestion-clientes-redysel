@@ -27,14 +27,14 @@ export interface ITemporaryClient {
   last_name: string;
   phone_number: string;
   zone: string;
-  payment_date: Date;
-  active: boolean;
+  payment_date: string;
 }
 
 export interface IClients {
-  id: number;
+  id?: number;
   name: string;
   last_name: string;
+  phone_number?: string;
   ip_address_id: number;
   zone: string;
   contracts: IContracts[];

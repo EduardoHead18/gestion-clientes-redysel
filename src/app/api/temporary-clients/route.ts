@@ -20,7 +20,6 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-
     const result = await createClientTempImplementation(data);
     return result;
   } catch (error) {

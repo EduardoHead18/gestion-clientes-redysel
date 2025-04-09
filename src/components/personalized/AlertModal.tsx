@@ -23,7 +23,7 @@ export const AlertModal = ({
   title: string;
   message: string;
   textButtonOption: string;
-  action?: () => void;
+  action?: () => void | Promise<void>;
 }) => {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>

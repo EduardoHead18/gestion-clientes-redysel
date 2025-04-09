@@ -9,7 +9,7 @@ export async function getClientsTempImplementation() {
 }
 
 export async function createClientTempImplementation(
-  data: Prisma.TemporaryClientsCreateManyInput
+  data: Prisma.TemporaryClientsCreateInput
 ) {
   const result = await prisma.temporaryClients.create({ data });
   return NextResponse.json({ data: result }, { status: 201 });
@@ -47,4 +47,18 @@ export async function deleteClientTempImplementation(id: number) {
     where: { id },
   });
   return result;
+}
+
+export async function getByIdTemporaryClientImp(id: number) {
+  const result = await prisma.temporaryClients.findUnique({
+    where: { id },
+  });
+
+  if (!result)
+    return NextResponse.json(
+      { message: "Cliente temporal no encontrado" },
+      { status: 404 }
+    );
+
+  return NextResponse.json({ data: result }, { status: 200 });
 }

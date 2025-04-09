@@ -26,7 +26,7 @@ export default function DropMenuComponent({ id }: { id: number }) {
       } else {
         alert("Error al eliminar el cliente");
       }
-    } catch (error) {
+    } catch {
       alert("Error en el servidor");
     }
   };

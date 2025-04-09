@@ -1,4 +1,8 @@
-import { IClients, IEmployee, ITemporaryClient } from "../interfaces/interfaces";
+import {
+  IClients,
+  IEmployee,
+  ITemporaryClient,
+} from "../interfaces/interfaces";
 
 export const loginAuth = async (body: object) => {
   const response = await fetch("/api/auth", {
@@ -51,6 +55,18 @@ export const getAllClients = async ({
   return responseJson.data;
 };
 
+export const createClient = async (data: IClients) => {
+  const response = await fetch("/api/clients", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const respondeJson = await response.json();
+  return respondeJson;
+};
+
 export const deleteClient = async (id: number) => {
   const response = await fetch(`/api/clients?id=${id}`, {
     method: "DELETE",
@@ -58,14 +74,27 @@ export const deleteClient = async (id: number) => {
   const responseJson = await response.json();
   return { status: response.status, data: responseJson };
 };
+
+export const getAllTemporaryClients = async () => {
+  const response = await fetch("/api/temporary-clients");
+  const responseJson = await response.json();
+  return { status: response.status, data: responseJson.data };
+};
+
 export const createTemporaryClient = async (data: ITemporaryClient) => {
-  const response = await fetch("/api/clients-temporary", {
+  const response = await fetch("/api/temporary-clients", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
   const responseJson = await response.json();
-  return { status: response.status, data:responseJson.data};
+  return { status: response.status, data: responseJson.data };
+};
+
+export const getByIdTemporaryClient = async (id: number) => {
+  const response = await fetch(`/api/temporary-clients/${id}`);
+  const responseJson = await response.json();
+  return responseJson.data;
 };

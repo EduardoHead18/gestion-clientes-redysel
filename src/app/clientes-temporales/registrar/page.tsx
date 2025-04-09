@@ -30,8 +30,7 @@ export default function ClientsTemporaryPage() {
   const onSubmit = async (data: ITemporaryClient) => {
     const sendData = {
       ...data,
-      payment_date: new Date(),
-      active: false,
+      payment_date: new Date().toISOString(),
     };
     const response = await createTemporaryClient(sendData);
     if (response?.status === 201) {
@@ -132,9 +131,10 @@ export default function ClientsTemporaryPage() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>zonas</SelectLabel>
-                        <SelectItem value="ocosingo">Ocosingo</SelectItem>
                         <SelectItem value="chilon">Chilon</SelectItem>
-                        <SelectItem value="palenque">Palenque</SelectItem>
+                        <SelectItem value="ocosingo">Ocosingo</SelectItem>
+                        <SelectItem value="petalcingo">Petalcingo</SelectItem>
+                        <SelectItem value="yajalon">Yajalon</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </label>

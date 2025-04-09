@@ -69,19 +69,27 @@ export async function getClientsImplementation(data: IGetClients) {
   return NextResponse.json("error", { status: 400 });
 }
 
-export async function createClient(data: Prisma.ClientsCreateInput) {
-  try {
-    const client = await prisma.clients.create({ data });
-    return NextResponse.json(client, { status: 201 });
-  } catch {
+export async function getClientByIdImplementation(id: number) {
+  const result = await prisma.clients.findUnique({
+    where: { id },
+  });
+  if (!result)
     return NextResponse.json(
-      { error: "Failed to create client" },
-      { status: 400 }
+      { message: "Cliente no encontrado" },
+      { status: 404 }
     );
-  }
+  return NextResponse.json({ data: result }, { status: 200 });
 }
 
-export async function deleteClientImplement(id: number) {
+export async function createClientImplementation(
+  data: Prisma.ClientsCreateInput
+) {
+  console.log(data)
+  const result = await prisma.clients.create({ data });
+  return NextResponse.json({ data: result }, { status: 201 });
+}
+
+export async function deleteClientImplementation(id: number) {
   if (!id) {
     return NextResponse.json(
       { error: "Client ID is required" },
