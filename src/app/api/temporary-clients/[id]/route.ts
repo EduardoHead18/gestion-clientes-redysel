@@ -26,11 +26,14 @@ export async function GET(
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const id = await req.json();
-    await deleteClientTempImplementation(id);
-    return NextResponse.json({ message: "Cliente eliminado" }, { status: 200 });
+    const id = parseInt(params.id, 10);
+    const result = await deleteClientTempImplementation(id);
+    return result;
   } catch {
     return NextResponse.json(
       { error: "Falló al eliminar el cliente" },

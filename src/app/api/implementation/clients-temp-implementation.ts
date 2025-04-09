@@ -43,10 +43,19 @@ export async function updateClientTempImplementation(
 }
 
 export async function deleteClientTempImplementation(id: number) {
-  const result = await prisma.temporaryClients.delete({
+  const findClient = await prisma.temporaryClients.findUnique({
     where: { id },
   });
-  return result;
+  if (!findClient)
+    return NextResponse.json(
+      { message: "cliente no encontrado" },
+      { status: 404 }
+    );
+
+  await prisma.temporaryClients.delete({
+    where: { id },
+  });
+  return NextResponse.json({ message: "Cliente eliminado" }, { status: 200 });
 }
 
 export async function getByIdTemporaryClientImp(id: number) {
