@@ -64,7 +64,7 @@ export const createClient = async (data: IClients) => {
     body: JSON.stringify(data),
   });
   const respondeJson = await response.json();
-  return respondeJson;
+  return { status: response.status, data: respondeJson };
 };
 
 export const deleteClient = async (id: number) => {
@@ -97,4 +97,12 @@ export const getByIdTemporaryClient = async (id: number) => {
   const response = await fetch(`/api/temporary-clients/${id}`);
   const responseJson = await response.json();
   return responseJson.data;
+};
+
+export const deleteTemporaryClient = async (id: number) => {
+  const response = await fetch(`/api/temporary-clients/${id}`, {
+    method: "DELETE",
+  });
+  const respondeJson = await response.json();
+  return respondeJson;
 };

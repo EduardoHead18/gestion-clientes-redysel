@@ -3,23 +3,24 @@ import { PaginationComponent } from "@/components/personalized/PaginationCompone
 import { SearchComponent } from "@/components/personalized/SearchComponent";
 import { IconPlus } from "@tabler/icons-react";
 import { columns } from "./colums";
-
 import LayoutHome from "../inicio/layout";
 import { DataTable } from "./data-table";
 import { useEffect, useState } from "react";
 import { getAllTemporaryClients } from "@/services/services-api";
 import { ITemporaryClient } from "@/interfaces/interfaces";
 import Link from "next/link";
+import { useRefreshComponent } from "@/hooks/useStore";
 
 export default function ClientesTemporalesPage() {
   const [data, setData] = useState<ITemporaryClient[]>([]);
+  const { refresh } = useRefreshComponent();
   const getAllClientsTemp = async () => {
     const response = await getAllTemporaryClients();
     setData(response.data);
   };
   useEffect(() => {
     getAllClientsTemp();
-  }, []);
+  }, [refresh]);
   return (
     <LayoutHome>
       <div className="container mx-auto px-10">

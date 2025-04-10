@@ -18,6 +18,10 @@ export interface IToken {
   token: string;
   setToken: (token: string) => void;
 }
+export interface IRefreshComponent {
+  refresh: boolean;
+  refreshFunction: () => void;
+}
 
 export const useStorePagination = create<IPagination>((set) => ({
   page: 1,
@@ -39,4 +43,9 @@ export const useStoreSearch = create<ISearchState>((set) => ({
 export const useStoreToken = create<IToken>((set) => ({
   token: "",
   setToken: (token: string) => set({ token }),
+}));
+
+export const useRefreshComponent = create<IRefreshComponent>((set) => ({
+  refresh: false,
+  refreshFunction: () => set((state) => ({ refresh: !state.refresh })),
 }));

@@ -84,7 +84,6 @@ export async function getClientByIdImplementation(id: number) {
 export async function createClientImplementation(
   data: Prisma.ClientsCreateInput
 ) {
-  console.log(data)
   const result = await prisma.clients.create({ data });
   return NextResponse.json({ data: result }, { status: 201 });
 }
