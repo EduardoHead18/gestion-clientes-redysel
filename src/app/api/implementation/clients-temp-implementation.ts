@@ -2,10 +2,61 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { decodeToken } from "../utils/tools";
 
-export async function getClientsTempImplementation() {
-  const result = await prisma.temporaryClients.findMany();
-  return NextResponse.json({ data: result }, { status: 200 });
+interface IGetClients {
+  typeParam?: string | null;
+  searchParam?: string | null;
+  page?: number;
+  pageLimit?: number;
+  tokenHeader?: string | null;
+}
+
+export async function getClientsTempImplementation(data: IGetClients) {
+  const { searchParam, typeParam, tokenHeader } = data;
+  const responseDecodeToken = decodeToken(tokenHeader!);
+  if (!responseDecodeToken || typeof responseDecodeToken !== "object") {
+    return NextResponse.json({ error: "Token no válido" }, { status: 401 });
+  }
+  const page = data.page ?? 1;
+  const pageLimit = data.pageLimit ?? 10;
+  if (typeParam === "clients") {
+    const skip = (page - 1) * pageLimit;
+
+    if (
+      searchParam === "" ||
+      searchParam === undefined ||
+      searchParam === null
+    ) {
+      const clients = await prisma.temporaryClients.findMany({
+        skip,
+        take: pageLimit,
+      });
+
+      return NextResponse.json({ data: clients }, { status: 200 });
+    }
+
+    const clients = await prisma.temporaryClients.findMany({
+      skip,
+      take: pageLimit,
+      where: {
+        OR: [
+          { name: { contains: searchParam || undefined } },
+          { last_name: { contains: searchParam || undefined } },
+        ],
+      },
+    });
+
+    if (clients.length === 0) {
+      return NextResponse.json(
+        { data: "No se encontro registros" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ data: clients }, { status: 200 });
+  }
+  return NextResponse.json("error", { status: 400 });
 }
 
 export async function createClientTempImplementation(

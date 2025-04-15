@@ -1,6 +1,15 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 const tokenKey = process.env.TOKEN_SECRET;
-export function decodeToken(authHeader: string) {
+
+type typeToken = {
+  id: string;
+  email: string;
+  role: string;
+  zone: string;
+};
+export function decodeToken(
+  authHeader: string
+): typeToken | string | JwtPayload {
   const token = authHeader.split(" ")[1];
   if (!authHeader) return "Token requerido";
   try {

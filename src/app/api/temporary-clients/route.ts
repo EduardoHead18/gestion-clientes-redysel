@@ -5,9 +5,20 @@ import {
   createClientTempImplementation,
 } from "../implementation/clients-temp-implementation";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const result = await getClientsTempImplementation();
+    const { searchParams } = req.nextUrl;
+    const tokenHeader = req.headers.get("authorization");
+
+    const dataObjectTransfer = {
+      typeParam: searchParams.get("type"),
+      searchParam: searchParams.get("search"),
+      page: parseInt(searchParams.get("page") || "1", 10),
+      pageLimit: parseInt(searchParams.get("pageLimit") || "10", 10),
+      tokenHeader: tokenHeader,
+    };
+
+    const result = await getClientsTempImplementation(dataObjectTransfer);
     return result;
   } catch {
     return NextResponse.json(

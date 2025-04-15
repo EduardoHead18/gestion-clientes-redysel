@@ -9,18 +9,32 @@ import { useEffect, useState } from "react";
 import { getAllTemporaryClients } from "@/services/services-api";
 import { ITemporaryClient } from "@/interfaces/interfaces";
 import Link from "next/link";
-import { useRefreshComponent } from "@/hooks/useStore";
+import { useStoreToken } from "@/hooks/useStore";
+import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
 
 export default function ClientesTemporalesPage() {
-  const [data, setData] = useState<ITemporaryClient[]>([]);
-  const { refresh } = useRefreshComponent();
+  const [clients, setClients] = useState<ITemporaryClient[]>([]);
+  const { page, refresh } = useStorePagination();
+  const { search } = useStoreSearch();
+  const { token } = useStoreToken();
+
   const getAllClientsTemp = async () => {
-    const response = await getAllTemporaryClients();
-    setData(response.data);
+    try {
+      const response = await getAllTemporaryClients({
+        page: page,
+        pageLimit: 20,
+        search: search,
+        token: token,
+      });
+      if (response.status === 200) setClients(response.data);
+      else setClients([]);
+    } catch (error) {
+      console.error("error:", error);
+    }
   };
   useEffect(() => {
     getAllClientsTemp();
-  }, [refresh]);
+  }, [page, search, refresh]);
   return (
     <LayoutHome>
       <div className="container mx-auto px-10">
@@ -41,7 +55,7 @@ export default function ClientesTemporalesPage() {
           <SearchComponent />
           <PaginationComponent />
         </div>
-        <DataTable columns={columns} data={data} />
+        <DataTable columns={columns} data={clients} />
       </div>
     </LayoutHome>
   );

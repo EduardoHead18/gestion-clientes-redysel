@@ -4,6 +4,13 @@ import {
   ITemporaryClient,
 } from "../interfaces/interfaces";
 
+interface IClientsParams {
+  page: number;
+  pageLimit: number;
+  search: string;
+  token: string;
+}
+
 export const loginAuth = async (body: object) => {
   const response = await fetch("/api/auth", {
     method: "POST",
@@ -27,13 +34,6 @@ export const createEmployeeApi = async (body: IEmployee) => {
   const responseJson = await response.json();
   return { status: response.status, data: responseJson };
 };
-
-interface IClientsParams {
-  page: number;
-  pageLimit: number;
-  search: string;
-  token: string;
-}
 
 export const getAllClients = async ({
   page,
@@ -75,8 +75,22 @@ export const deleteClient = async (id: number) => {
   return { status: response.status, data: responseJson };
 };
 
-export const getAllTemporaryClients = async () => {
-  const response = await fetch("/api/temporary-clients");
+export const getAllTemporaryClients = async ({
+  page,
+  pageLimit,
+  search,
+  token,
+}: IClientsParams) => {
+  const response = await fetch(
+    `api/temporary-clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const responseJson = await response.json();
   return { status: response.status, data: responseJson.data };
 };
