@@ -16,7 +16,7 @@ export async function getClientsImplementation(data: IGetClients) {
   // Check if the token is valid
   const responseDecodeToken = decodeToken(tokenHeader!);
   let employeeZone = "";
-
+  //validate the zone from the token
   if (typeof responseDecodeToken === "string") {
     console.error("Error decoding token:", responseDecodeToken);
   } else if ("zone" in responseDecodeToken) {

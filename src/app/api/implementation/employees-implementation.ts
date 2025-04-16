@@ -2,7 +2,13 @@ import bcrypt from "bcrypt";
 import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-export async function createEmployee(data: Prisma.EmployeesCreateInput) {
+
+export async function getAllEmployeeImpl() {
+  const getAllEmployee = await prisma.employees.findMany();
+  return NextResponse.json({ data: getAllEmployee }, { status: 200 });
+}
+
+export async function createEmployeeImpl(data: Prisma.EmployeesCreateInput) {
   const { name, last_name, zone, role, email, password } = data;
 
   const passwordEncrypted = await bcrypt.hash(password, 10);

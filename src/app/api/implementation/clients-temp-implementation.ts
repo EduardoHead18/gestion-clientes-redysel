@@ -14,10 +14,20 @@ interface IGetClients {
 
 export async function getClientsTempImplementation(data: IGetClients) {
   const { searchParam, typeParam, tokenHeader } = data;
+  // Check if the token is valid
+
   const responseDecodeToken = decodeToken(tokenHeader!);
+  let employeeZone = "";
+  //validate the zone from the token
+  if (typeof responseDecodeToken === "string") {
+    console.error("Error decoding token:", responseDecodeToken);
+  } else if ("zone" in responseDecodeToken) {
+    employeeZone = responseDecodeToken.zone;
+  }
   if (!responseDecodeToken || typeof responseDecodeToken !== "object") {
     return NextResponse.json({ error: "Token no válido" }, { status: 401 });
   }
+
   const page = data.page ?? 1;
   const pageLimit = data.pageLimit ?? 10;
   if (typeParam === "clients") {
@@ -31,18 +41,25 @@ export async function getClientsTempImplementation(data: IGetClients) {
       const clients = await prisma.temporaryClients.findMany({
         skip,
         take: pageLimit,
+        where: {
+          zone: employeeZone,
+        },
       });
-
       return NextResponse.json({ data: clients }, { status: 200 });
     }
-
+    console.log("zona: jaja ", employeeZone);
     const clients = await prisma.temporaryClients.findMany({
       skip,
       take: pageLimit,
       where: {
-        OR: [
-          { name: { contains: searchParam || undefined } },
-          { last_name: { contains: searchParam || undefined } },
+        AND: [
+          { zone: employeeZone },
+          {
+            OR: [
+              { name: { contains: searchParam || undefined } },
+              { last_name: { contains: searchParam || undefined } },
+            ],
+          },
         ],
       },
     });
