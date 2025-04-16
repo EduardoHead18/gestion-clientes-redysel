@@ -1,7 +1,7 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@lib/prisma";
-import bcrypt from "bcrypt";
+import { createEmployee } from "../implementation/employees-implementation";
 
 export async function GET() {
   try {
@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json(employees);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch employees" },
+      { error: "Failed to fetch employees", info: error },
       { status: 500 }
     );
   }
@@ -17,32 +17,16 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, lastName, zone, role, email, password } = await req.json();
-
-    const passwordEncrypted = await bcrypt.hash(password, 10);
-
-    const findUser = await prisma.employees.findUnique({
-      where: {
-        email,
-      },
-    });
-    if(findUser) return NextResponse.json({message: 'El usuario ya existe'}, { status: 409 });
-    const employee = await prisma.employees.create({
-      data: {
-        name,
-        last_name: lastName,
-        role,
-        zone, 
-        email,
-        password: passwordEncrypted,
-      },
-    });
-
-    return NextResponse.json(employee, { status: 201 });
+    const data = await req.json();
+    const result = await createEmployee(data);
+    return result;
   } catch (error) {
-    return NextResponse.json({
-      message: "Failed to create employee",
-      status: 400,
-    });
+    return NextResponse.json(
+      {
+        message: "Failed to create employee",
+        info: error,
+      },
+      { status: 500 }
+    );
   }
 }
