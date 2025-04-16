@@ -45,8 +45,8 @@ export default function ClientesTemporalesPage() {
               href="/clientes-temporales/registrar"
               className="bg-gray-800 text-white hover:bg-gray-800 transition-colors duration-300 hover:cursor-pointer rounded-md px-4 py-2 flex items-center gap-2"
             >
-              Nuevo Cliente
               <IconPlus size={20} />
+              Nuevo Cliente
             </Link>
           </div>
         </div>

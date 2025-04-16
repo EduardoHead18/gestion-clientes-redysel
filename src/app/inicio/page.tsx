@@ -11,6 +11,7 @@ import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
 import { useStoreToken } from "@/hooks/useStore";
 import { IconPlus } from "@tabler/icons-react";
 
+//TODO: Prevent page changes if the page size is not greater than 20 data.
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
   const { page, refresh } = useStorePagination();

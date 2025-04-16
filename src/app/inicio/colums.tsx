@@ -48,7 +48,7 @@ export const columns: ColumnDef<IClients>[] = [
   {
     cell({ row }) {
       const clientId = row.original.id;
-      return <DropMenuComponent id={clientId} />;
+      if (clientId) return <DropMenuComponent id={clientId} />;
     },
     header: "Acciones",
   },

@@ -4,6 +4,7 @@ import {
   ITemporaryClient,
 } from "../interfaces/interfaces";
 
+//small interfaces
 interface IClientsParams {
   page: number;
   pageLimit: number;
@@ -11,6 +12,7 @@ interface IClientsParams {
   token: string;
 }
 
+//AUTH API
 export const loginAuth = async (body: object) => {
   const response = await fetch("/api/auth", {
     method: "POST",
@@ -23,6 +25,7 @@ export const loginAuth = async (body: object) => {
   return { status: response.status, data: responseJson };
 };
 
+//EMPLOYEES API
 export const createEmployeeApi = async (body: IEmployee) => {
   const response = await fetch("/api/employees", {
     method: "POST",
@@ -35,6 +38,7 @@ export const createEmployeeApi = async (body: IEmployee) => {
   return { status: response.status, data: responseJson };
 };
 
+//CLIENTS API
 export const getAllClients = async ({
   page,
   pageLimit,
@@ -75,6 +79,7 @@ export const deleteClient = async (id: number) => {
   return { status: response.status, data: responseJson };
 };
 
+//TEMPORARY-CLIENTS API
 export const getAllTemporaryClients = async ({
   page,
   pageLimit,
@@ -119,4 +124,11 @@ export const deleteTemporaryClient = async (id: number) => {
   });
   const respondeJson = await response.json();
   return respondeJson;
+};
+
+// IP-ADDRESS API
+export const getAllIpAdress = async () => {
+  const response = await fetch("api/ip-address");
+  const responseJson = await response.json();
+  return { status: response.status, data: responseJson.data };
 };
