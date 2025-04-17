@@ -47,7 +47,6 @@ export async function getClientsTempImplementation(data: IGetClients) {
       });
       return NextResponse.json({ data: clients }, { status: 200 });
     }
-    console.log("zona: jaja ", employeeZone);
     const clients = await prisma.temporaryClients.findMany({
       skip,
       take: pageLimit,

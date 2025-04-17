@@ -1,6 +1,7 @@
 import {
   IClients,
   IEmployee,
+  IPadress,
   ITemporaryClient,
 } from "../interfaces/interfaces";
 
@@ -128,7 +129,23 @@ export const deleteTemporaryClient = async (id: number) => {
 
 // IP-ADDRESS API
 export const getAllIpAdress = async () => {
-  const response = await fetch("api/ip-address");
+  const response = await fetch("/api/ip-address");
   const responseJson = await response.json();
   return { status: response.status, data: responseJson.data };
+};
+
+export const createIpAddress = async (data: IPadress) => {
+  try {
+    const response = await fetch("/api/ip-address", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const responseJson = await response.json();
+    return { status: response.status, data: responseJson };
+  } catch (error) {
+    throw error;
+  }
 };

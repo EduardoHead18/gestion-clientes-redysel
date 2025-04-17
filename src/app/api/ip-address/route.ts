@@ -1,16 +1,18 @@
 "use server";
 
-import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { getAllIpAdressImpl } from "../implementation/ip-address-implementation";
+import {
+  createIpAdressImpl,
+  getAllIpAdressImpl,
+} from "../implementation/ip-address-implementation";
 
 export async function GET() {
   try {
     const result = await getAllIpAdressImpl();
     return result;
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { message: "Failed to create client", info: error },
+      { message: "Falló al obtener la dirección IP" },
       { status: 500 }
     );
   }
@@ -18,11 +20,11 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const result = await prisma.ip_address.create({ data });
+    const result = await createIpAdressImpl(data);
     return result;
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { message: "Failed to create client", info: error },
+      { message: "Falló al crear la dirección IP" },
       { status: 500 }
     );
   }

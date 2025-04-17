@@ -11,7 +11,7 @@ export async function GET() {
     return employees;
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch employees", info: error },
+      { message: "Failed to fetch employees", info: error },
       { status: 500 }
     );
   }
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       {
-        message: "Failed to create employee",
+        message: "Error al crear el empleado",
         info: error,
       },
       { status: 500 }

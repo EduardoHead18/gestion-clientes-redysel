@@ -36,3 +36,28 @@ export async function createEmployeeImpl(data: Prisma.EmployeesCreateInput) {
 
   return NextResponse.json({ data: employee }, { status: 201 });
 }
+
+export default async function deleteEmployeeImpl(id: number) {
+  if (!id) {
+    return NextResponse.json(
+      { message: "el ID es requerido" },
+      { status: 400 }
+    );
+  }
+
+  const result = await prisma.employees.findUnique({
+    where: { id },
+  });
+
+  if (!result) {
+    return NextResponse.json(
+      { error: "Empleado no encontrado" },
+      { status: 404 }
+    );
+  }
+
+  await prisma.employees.delete({
+    where: { id },
+  });
+  return NextResponse.json({ message: "Empleado eliminado" }, { status: 200 });
+}
