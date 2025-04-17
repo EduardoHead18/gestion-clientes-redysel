@@ -20,3 +20,25 @@ export async function createIpAdressImpl(data: Prisma.Ip_addressCreateInput) {
   const ipAdress = await prisma.ip_address.create({ data });
   return NextResponse.json({ data: ipAdress }, { status: 200 });
 }
+
+export async function deleteIpAddressImpl(id: number) {
+  if (!id) {
+    return NextResponse.json(
+      { message: "el ID es requerido" },
+      { status: 400 }
+    );
+  }
+
+  const result = await prisma.ip_address.findUnique({
+    where: { id },
+  });
+
+  if (!result) {
+    return NextResponse.json({ error: "IP no encontrado" }, { status: 404 });
+  }
+
+  await prisma.ip_address.delete({
+    where: { id },
+  });
+  return NextResponse.json({ message: "IP eliminado" }, { status: 200 });
+}

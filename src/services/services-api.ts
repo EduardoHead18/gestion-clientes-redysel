@@ -149,3 +149,11 @@ export const createIpAddress = async (data: IPadress) => {
     throw error;
   }
 };
+
+export const deleteIpAdressService = async (id: number) => {
+  const response = await fetch(`/api/ip-address/${id}`, {
+    method: "DELETE",
+  });
+  const responseJson = await response.json();
+  return responseJson;
+};

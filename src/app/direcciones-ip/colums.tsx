@@ -4,6 +4,16 @@ import { ColumnDef } from "@tanstack/react-table";
 import { IPadress } from "../../interfaces/interfaces";
 import { BadgeStatus } from "../../components/personalized/BadgeStatus";
 import DropMenuComponent from "../../components/personalized/DropMenuComponent";
+import { deleteIpAdressService } from "@/services/services-api";
+
+const deleteIpAdressFunc = async (id: number) => {
+  console.log("ip: ", id);
+  try {
+    await deleteIpAdressService(id);
+  } catch {
+    alert("Error en el servidor");
+  }
+};
 export const columns: ColumnDef<IPadress>[] = [
   {
     accessorKey: "id",
@@ -27,8 +37,15 @@ export const columns: ColumnDef<IPadress>[] = [
   },
   {
     cell({ row }) {
-      const clientId = row.original.id;
-      if (clientId) return <DropMenuComponent id={clientId} />;
+      const ipAdressId = row.original.id;
+      if (!ipAdressId) return null;
+      if (ipAdressId)
+        return (
+          <DropMenuComponent
+            functionProp={() => deleteIpAdressFunc(ipAdressId)}
+            id={ipAdressId}
+          />
+        );
     },
     header: "Acciones",
   },

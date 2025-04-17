@@ -9,31 +9,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { AlertModal } from "./AlertModal";
-import { deleteClient } from "@/services/services-api";
-import { useStorePagination } from "@/hooks/useStore";
 import { useState } from "react";
+import { useRefreshIpAdressApi } from "@/hooks/useStore";
 
-export default function DropMenuComponent({ id }: { id: number }) {
-  const { refreshFunction } = useStorePagination();
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
+interface DropMenuComponentProps {
+  id: number;
+  functionProp: (id: number) => Promise<void>;
+}
 
-  const deleteApiClient = async () => {
-    try {
-      const response = await deleteClient(id);
-      if (response.status === 200) {
-        refreshFunction();
-        setIsModalOpen(false);
-      } else {
-        alert("Error al eliminar el cliente");
-      }
-    } catch {
-      alert("Error en el servidor");
-    }
-  };
-
-  const handleEditClick = () => {
-    alert("Hola");
-  };
+export default function DropMenuComponent({
+  id,
+  functionProp,
+}: DropMenuComponentProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { refreshFunction } = useRefreshIpAdressApi();
 
   return (
     <div className="container mx-auto px-10">
@@ -42,7 +31,9 @@ export default function DropMenuComponent({ id }: { id: number }) {
           <IconDotsVertical size={30} className="py-1 flex opacity-40" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={handleEditClick}>Editar</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => alert("editar")}>
+            Editar
+          </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => setIsModalOpen(true)}>
             Eliminar
@@ -59,7 +50,10 @@ export default function DropMenuComponent({ id }: { id: number }) {
         title="¿Quieres eliminarlo?"
         message="Esta acción no se puede deshacer."
         textButtonOption="Confirmar"
-        action={deleteApiClient}
+        action={async () => {
+          await functionProp(id);
+          refreshFunction();
+        }}
       />
     </div>
   );

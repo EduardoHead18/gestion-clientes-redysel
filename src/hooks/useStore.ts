@@ -23,6 +23,11 @@ export interface IRefreshComponent {
   refreshFunction: () => void;
 }
 
+export interface IRefreshIpAdressApi {
+  refresh: boolean;
+  refreshFunction: () => void;
+}
+
 export const useStorePagination = create<IPagination>((set) => ({
   page: 1,
   refresh: false,
@@ -46,6 +51,11 @@ export const useStoreToken = create<IToken>((set) => ({
 }));
 
 export const useRefreshComponent = create<IRefreshComponent>((set) => ({
+  refresh: false,
+  refreshFunction: () => set((state) => ({ refresh: !state.refresh })),
+}));
+
+export const useRefreshIpAdressApi = create<IRefreshIpAdressApi>((set) => ({
   refresh: false,
   refreshFunction: () => set((state) => ({ refresh: !state.refresh })),
 }));

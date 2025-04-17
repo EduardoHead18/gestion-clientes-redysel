@@ -9,16 +9,18 @@ import { useEffect, useState } from "react";
 import { getAllIpAdress } from "@/services/services-api";
 import { IPadress } from "@/interfaces/interfaces";
 import { columns } from "./colums";
+import { useRefreshIpAdressApi } from "@/hooks/useStore";
 
 export default function IpAddressPage() {
   const [dataIpAdress, setDataIpAdress] = useState<IPadress[]>([]);
+  const { refresh } = useRefreshIpAdressApi();
   useEffect(() => {
     const getIpAddress = async () => {
       const response = await getAllIpAdress();
       setDataIpAdress(response.data);
     };
     getIpAddress();
-  }, []);
+  }, [refresh]);
   return (
     <LayoutHome>
       <div className="container mx-auto px-10">
