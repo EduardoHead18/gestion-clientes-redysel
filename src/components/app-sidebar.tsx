@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   IconBrandCashapp,
   IconList,
   IconSettings,
   IconTransferOut,
   IconUsers,
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -20,9 +20,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-
+} from "@/components/ui/sidebar";
+import Link from "next/link";
 
 const data = {
   user: {
@@ -31,6 +30,11 @@ const data = {
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
+    {
+      title: "Clientes",
+      url: "/clientes/",
+      icon: IconUsers,
+    },
     {
       title: "Clientes temporales",
       url: "/clientes-temporales/",
@@ -45,9 +49,9 @@ const data = {
       title: "Direcciones IP",
       url: "/direcciones-ip/",
       icon: IconList,
-    }
+    },
   ],
- 
+
   navSecondary: [
     {
       title: "Configuración",
@@ -59,8 +63,8 @@ const data = {
       url: "#",
       icon: IconTransferOut,
     },
-  ]
-}
+  ],
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -73,7 +77,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/inicio">
-                <span className="text-base font-semibold">Gestión Redysel.</span>
+                <span className="text-base font-semibold">
+                  Gestión Redysel.
+                </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -88,5 +94,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
