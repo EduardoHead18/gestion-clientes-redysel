@@ -7,7 +7,6 @@ import DropMenuComponent from "../../components/personalized/DropMenuComponent";
 import { deleteIpAdressService } from "@/services/services-api";
 
 const deleteIpAdressFunc = async (id: number) => {
-  console.log("ip: ", id);
   try {
     await deleteIpAdressService(id);
   } catch {
