@@ -8,7 +8,8 @@ import { deleteIpAdressService } from "@/services/services-api";
 
 const deleteIpAdressFunc = async (id: number) => {
   try {
-    await deleteIpAdressService(id);
+    const response = await deleteIpAdressService(id);
+    if (response.status === 409) return alert(response.data.message);
   } catch {
     alert("Error en el servidor");
   }

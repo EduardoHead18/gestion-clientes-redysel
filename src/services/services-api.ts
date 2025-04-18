@@ -155,7 +155,7 @@ export const deleteIpAdressService = async (id: number) => {
     method: "DELETE",
   });
   const responseJson = await response.json();
-  return responseJson;
+  return { status: response.status, data: responseJson };
 };
 
 export const updateIpAddressService = async ({
