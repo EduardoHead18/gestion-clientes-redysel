@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { getCookie } from "../utils/cookies";
+import { decodeToken } from "../utils/tools";
 
 export async function getAllIpAdressImpl() {
   const ipAdress = await prisma.ip_address.findMany();
@@ -8,17 +10,42 @@ export async function getAllIpAdressImpl() {
 }
 
 export async function createIpAdressImpl(data: Prisma.Ip_addressCreateInput) {
-  const { ip_address } = data;
-  const ipAddressExist = await prisma.ip_address.findUnique({
-    where: { ip_address },
-  });
-  if (ipAddressExist)
-    return NextResponse.json(
-      { message: "La dirección IP ya existe" },
-      { status: 409 }
-    );
-  const ipAdress = await prisma.ip_address.create({ data });
-  return NextResponse.json({ data: ipAdress }, { status: 200 });
+  try {
+    const { ip_address } = data;
+    const ipAddressExist = await prisma.ip_address.findUnique({
+      where: { ip_address },
+    });
+    if (ipAddressExist)
+      return NextResponse.json(
+        { message: "La dirección IP ya existe" },
+        { status: 409 }
+      );
+
+    //getCookie token
+    const cookie = await getCookie();
+
+    const decodeTokenFunc = decodeToken(cookie!);
+    let employeeZone = "";
+
+    //validate the zone from the token
+    if (typeof decodeTokenFunc === "string") {
+      console.error("Error decoding token:", decodeTokenFunc);
+    } else if ("zone" in decodeTokenFunc) {
+      employeeZone = decodeTokenFunc.zone;
+    }
+
+    const newObject = {
+      ...data,
+      zone: employeeZone,
+    };
+
+    console.log(newObject);
+    const ipAdress = await prisma.ip_address.create({ data: newObject });
+    return NextResponse.json({ data: ipAdress }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: error }, { status: 200 });
+  }
 }
 
 export async function deleteIpAddressImpl(id: number) {

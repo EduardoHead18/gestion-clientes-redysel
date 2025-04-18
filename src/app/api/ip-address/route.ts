@@ -22,9 +22,10 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     const result = await createIpAdressImpl(data);
     return result;
-  } catch {
+  } catch (error) {
+    console.log(error);
     return NextResponse.json(
-      { message: "Falló al crear la dirección IP" },
+      { message: "Falló al crear la dirección IP", info: error },
       { status: 500 }
     );
   }
