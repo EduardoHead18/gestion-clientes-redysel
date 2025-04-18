@@ -36,6 +36,21 @@ export async function deleteIpAddressImpl(id: number) {
   if (!result) {
     return NextResponse.json({ error: "IP no encontrado" }, { status: 404 });
   }
+  // check if the IP is in use for a client
+  const clientUsingIp = await prisma.clients.findFirst({
+    where: {
+      ip_address_id: id,
+    },
+  });
+
+  if (clientUsingIp) {
+    return NextResponse.json(
+      {
+        message: "No se puede eliminar la IP. Está en uso por un cliente.",
+      },
+      { status: 409 }
+    );
+  }
 
   await prisma.ip_address.delete({
     where: { id },
