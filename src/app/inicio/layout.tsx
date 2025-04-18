@@ -21,7 +21,6 @@ export default function LayoutHome({
         if (response === true) {
           setToken(true);
         } else {
-          console.log("No valid token, redirecting to login");
           router.push("/auth/login");
         }
       }

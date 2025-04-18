@@ -31,8 +31,8 @@ export const getServerCookie = async () => {
     const response = await fetch("/api/auth", {
       method: "GET",
     });
-    const respondeJson = await response.json();
-    return respondeJson.message;
+    const responseJson = await response.json();
+    return responseJson.message;
   } catch (error) {
     console.error(error);
   }

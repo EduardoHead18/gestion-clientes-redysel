@@ -17,7 +17,8 @@ export default function IpAddressPage() {
   useEffect(() => {
     const getIpAddress = async () => {
       const response = await getAllIpAdress();
-      setDataIpAdress(response.data);
+      if (response.status === 200) setDataIpAdress(response.data);
+      else setDataIpAdress([]);
     };
     getIpAddress();
   }, [refresh]);

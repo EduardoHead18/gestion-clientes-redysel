@@ -1,9 +1,9 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { loginAuth } from "@/services/services-api";
+import { getServerCookie, loginAuth } from "@/services/services-api";
 import { useRouter } from "next/navigation";
 import { AlertError } from "@/components/personalized/AlertError";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertBadge } from "@/components/personalized/AlertBadge";
 export default function Auth() {
   const {
@@ -14,6 +14,7 @@ export default function Auth() {
 
   const [authError, setAuthError] = useState<boolean>(false);
   const [messageError, setMessageError] = useState<string>("");
+  const [token, setToken] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (data: object) => {
@@ -38,7 +39,23 @@ export default function Auth() {
     }
   };
 
-  return (
+  useEffect(() => {
+    const getCookie = async () => {
+      const response = await getServerCookie();
+      if (typeof response === "boolean") {
+        if (response === true) {
+          router.push("/inicio/");
+        } else {
+          setToken(true);
+          router.push("/auth/login");
+        }
+      }
+    };
+
+    getCookie();
+  }, [router]);
+
+  return token ? (
     <section className="flex flex-col items-center justify-center min-h-screen">
       <div className="p-10 rounded-lg shadow-sm w-full sm:w-96">
         <h1 className="lg:text-2xl font-bold mb-10">Iniciar sesión</h1>
@@ -92,5 +109,5 @@ export default function Auth() {
         </form>
       </div>
     </section>
-  );
+  ) : null;
 }
