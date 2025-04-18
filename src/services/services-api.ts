@@ -157,3 +157,19 @@ export const deleteIpAdressService = async (id: number) => {
   const responseJson = await response.json();
   return responseJson;
 };
+
+export const updateIpAddressService = async ({
+  id,
+  status,
+}: {
+  id: number;
+  status: boolean;
+}) => {
+  const response = await fetch(`/api/ip-address/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+
+  return response.json();
+};

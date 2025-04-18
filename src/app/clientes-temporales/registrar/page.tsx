@@ -15,6 +15,7 @@ import { AlertBadge } from "@/components/personalized/AlertBadge";
 import { useState } from "react";
 import LayoutHome from "../../inicio/layout";
 import { createTemporaryClient } from "@/services/services-api";
+import { useRouter } from "next/navigation";
 
 export default function ClientsTemporaryPage() {
   const {
@@ -26,6 +27,7 @@ export default function ClientsTemporaryPage() {
   } = useForm<ITemporaryClient>();
   const [errorBadge, setErrorBadge] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const router = useRouter();
 
   const onSubmit = async (data: ITemporaryClient) => {
     const sendData = {
@@ -36,7 +38,7 @@ export default function ClientsTemporaryPage() {
     if (response?.status === 201) {
       setErrorMessage("Cliente registrado");
       setErrorBadge(true);
-      return;
+      return router.push("/clientes-temporales");
     } else {
       setErrorMessage("error en el servidor");
       setErrorBadge(true);

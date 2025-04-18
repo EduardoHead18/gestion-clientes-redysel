@@ -42,3 +42,27 @@ export async function deleteIpAddressImpl(id: number) {
   });
   return NextResponse.json({ message: "IP eliminado" }, { status: 200 });
 }
+
+export async function updateIpAdressImpl(
+  id: number,
+  data: Prisma.TemporaryClientsUpdateInput
+) {
+  if (!id) {
+    return NextResponse.json(
+      { message: "el ID es requerido" },
+      { status: 400 }
+    );
+  }
+  const findClient = await prisma.ip_address.findUnique({
+    where: { id },
+  });
+  if (!findClient)
+    return NextResponse.json({ message: "IP no encontrado" }, { status: 404 });
+
+  const result = await prisma.ip_address.update({
+    where: { id },
+    data,
+  });
+
+  return NextResponse.json({ data: result }, { status: 200 });
+}
