@@ -2,16 +2,34 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { useStoreToken } from "@/hooks/useStore";
-import NotFound from "../not-found";
+import { useEffect, useState } from "react";
+import { getServerCookie } from "@/services/services-api";
+import { useRouter } from "next/navigation";
 
 export default function LayoutHome({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { token } = useStoreToken();
-  //const token = true;
+  const [token, setToken] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const getCookie = async () => {
+      const response = await getServerCookie();
+      if (typeof response === "boolean") {
+        if (response === true) {
+          setToken(true);
+        } else {
+          console.log("No valid token, redirecting to login");
+          router.push("/auth/login");
+        }
+      }
+    };
+
+    getCookie();
+  }, [router]);
+
   return token ? (
     <SidebarProvider>
       <AppSidebar variant="inset" />
@@ -26,7 +44,5 @@ export default function LayoutHome({
         </div>
       </SidebarInset>
     </SidebarProvider>
-  ) : (
-    <NotFound />
-  );
+  ) : null;
 }

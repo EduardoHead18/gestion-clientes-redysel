@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { AlertError } from "@/components/personalized/AlertError";
 import { useState } from "react";
 import { AlertBadge } from "@/components/personalized/AlertBadge";
-import { useStoreToken } from "@/hooks/useStore";
 export default function Auth() {
   const {
     register,
@@ -13,17 +12,17 @@ export default function Auth() {
     formState: { errors },
   } = useForm();
 
-  const router = useRouter();
   const [authError, setAuthError] = useState<boolean>(false);
   const [messageError, setMessageError] = useState<string>("");
-  const { setToken } = useStoreToken();
+  const router = useRouter();
 
   const onSubmit = async (data: object) => {
     try {
       const response = await loginAuth(data);
       if (response?.status === 200) {
-        setToken(response.data.token);
-        router.push("/inicio");
+        setTimeout(() => {
+          router.push("/inicio");
+        }, 1000);
       }
       if (response?.status === 401) {
         setMessageError(response.data.message);

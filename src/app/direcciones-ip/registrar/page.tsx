@@ -24,6 +24,7 @@ export default function RegistrarIpAdressPage() {
 
   const route = useRouter();
   const onSubmit = async (data: IPadress) => {
+    //TODO: save the zone
     const dataObject = {
       ip_address: data.ipAddress,
       status: true,

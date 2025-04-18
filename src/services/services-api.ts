@@ -26,6 +26,18 @@ export const loginAuth = async (body: object) => {
   return { status: response.status, data: responseJson };
 };
 
+export const getServerCookie = async () => {
+  try {
+    const response = await fetch("/api/auth", {
+      method: "GET",
+    });
+    const respondeJson = await response.json();
+    return respondeJson.message;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 //EMPLOYEES API
 export const createEmployeeApi = async (body: IEmployee) => {
   const response = await fetch("/api/employees", {
