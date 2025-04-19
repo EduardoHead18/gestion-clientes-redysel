@@ -89,7 +89,7 @@ export const ButtonComponent = ({ text, id }: { text: string; id: number }) => {
       <AlertModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="¿Quieres crear el cliente y el contrato jaja?"
+        title="¿Quieres crear el cliente y el contrato?"
         message="Esta acción no se puede deshacer."
         textButtonOption="Confirmar"
         action={createClientAndContract}

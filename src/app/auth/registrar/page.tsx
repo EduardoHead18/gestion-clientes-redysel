@@ -15,8 +15,8 @@ import { IEmployee } from "@/interfaces/interfaces";
 import { createEmployeeApi } from "@/services/services-api";
 import { AlertBadge } from "@/components/personalized/AlertBadge";
 import { useState } from "react";
-import { useStoreToken } from "@/hooks/useStore";
 import NotFound from "@/app/not-found";
+import { useStoreToken } from "@/hooks/useStore";
 
 export default function Auth() {
   const {

@@ -37,7 +37,7 @@ export const columns: ColumnDef<ITemporaryClient>[] = [
   {
     cell({ row }) {
       const clientId = row.original.id;
-      return <ButtonComponent text={'Crear contrato'} id={clientId} />;
+      return <ButtonComponent text={"Crear contrato"} id={clientId} />;
     },
     header: "Acciones",
   },

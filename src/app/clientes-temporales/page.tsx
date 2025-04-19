@@ -9,14 +9,12 @@ import { useEffect, useState } from "react";
 import { getAllTemporaryClients } from "@/services/services-api";
 import { ITemporaryClient } from "@/interfaces/interfaces";
 import Link from "next/link";
-import { useStoreToken } from "@/hooks/useStore";
 import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
 
 export default function ClientesTemporalesPage() {
   const [clients, setClients] = useState<ITemporaryClient[]>([]);
   const { page, refresh } = useStorePagination();
   const { search } = useStoreSearch();
-  const { token } = useStoreToken();
 
   const getAllClientsTemp = async () => {
     try {
@@ -24,7 +22,6 @@ export default function ClientesTemporalesPage() {
         page: page,
         pageLimit: 20,
         search: search,
-        token: token,
       });
       if (response.status === 200) setClients(response.data);
       else setClients([]);

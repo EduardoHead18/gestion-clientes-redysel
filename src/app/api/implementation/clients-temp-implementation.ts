@@ -3,20 +3,20 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { decodeToken } from "../utils/tools";
+import { getCookie } from "../utils/cookies";
 
 interface IGetClients {
   typeParam?: string | null;
   searchParam?: string | null;
   page?: number;
   pageLimit?: number;
-  tokenHeader?: string | null;
 }
 
 export async function getClientsTempImplementation(data: IGetClients) {
-  const { searchParam, typeParam, tokenHeader } = data;
+  const { searchParam, typeParam } = data;
   // Check if the token is valid
-
-  const responseDecodeToken = decodeToken(tokenHeader!);
+  const cookieToken = await getCookie();
+  const responseDecodeToken = decodeToken(cookieToken!);
   let employeeZone = "";
   //validate the zone from the token
   if (typeof responseDecodeToken === "string") {

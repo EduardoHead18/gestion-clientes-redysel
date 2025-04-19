@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { AlertError } from "@/components/personalized/AlertError";
 import { useEffect, useState } from "react";
 import { AlertBadge } from "@/components/personalized/AlertBadge";
+import { useStoreToken } from "@/hooks/useStore";
+
 export default function Auth() {
   const {
     register,
@@ -14,8 +16,9 @@ export default function Auth() {
 
   const [authError, setAuthError] = useState<boolean>(false);
   const [messageError, setMessageError] = useState<string>("");
-  const [token, setToken] = useState(false);
+  const [token, setTokenTwo] = useState(false);
   const router = useRouter();
+  const { setToken } = useStoreToken();
 
   const onSubmit = async (data: object) => {
     try {
@@ -44,9 +47,10 @@ export default function Auth() {
       const response = await getServerCookie();
       if (typeof response === "boolean") {
         if (response === true) {
+          setToken("token");
           router.push("/inicio/");
         } else {
-          setToken(true);
+          setTokenTwo(true);
           router.push("/auth/login");
         }
       }

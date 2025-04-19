@@ -42,8 +42,10 @@ export const columns: ColumnDef<IPadress>[] = [
       if (ipAdressId)
         return (
           <DropMenuComponent
-            functionProp={() => deleteIpAdressFunc(ipAdressId)}
             id={ipAdressId}
+            functionProp={() => {
+              return deleteIpAdressFunc(ipAdressId);
+            }}
           />
         );
     },

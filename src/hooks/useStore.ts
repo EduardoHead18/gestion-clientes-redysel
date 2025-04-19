@@ -23,6 +23,11 @@ export interface IRefreshComponent {
   refreshFunction: () => void;
 }
 
+export interface IRefreshClientComponent {
+  refreshClient: boolean;
+  refreshFunctionClient: () => void;
+}
+
 export interface IRefreshIpAdressApi {
   refresh: boolean;
   refreshFunction: () => void;
@@ -54,6 +59,14 @@ export const useRefreshComponent = create<IRefreshComponent>((set) => ({
   refresh: false,
   refreshFunction: () => set((state) => ({ refresh: !state.refresh })),
 }));
+
+export const useRefreshClientComponent = create<IRefreshClientComponent>(
+  (set) => ({
+    refreshClient: false,
+    refreshFunctionClient: () =>
+      set((state) => ({ refreshClient: !state.refreshClient })),
+  })
+);
 
 export const useRefreshIpAdressApi = create<IRefreshIpAdressApi>((set) => ({
   refresh: false,

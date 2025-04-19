@@ -1,20 +1,21 @@
 "use server";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 import { Prisma } from "@prisma/client";
 import { decodeToken } from "../utils/tools";
+import { getCookie } from "../utils/cookies";
 
 interface IGetClients {
   typeParam?: string | null;
   searchParam?: string | null;
   page?: number;
   pageLimit?: number;
-  tokenHeader?: string | null;
 }
 export async function getClientsImplementation(data: IGetClients) {
-  const { searchParam, typeParam, tokenHeader } = data;
+  const { searchParam, typeParam } = data;
   // Check if the token is valid
-  const responseDecodeToken = decodeToken(tokenHeader!);
+  const cookieToken = await getCookie();
+  const responseDecodeToken = decodeToken(cookieToken!);
   let employeeZone = "";
   //validate the zone from the token
   if (typeof responseDecodeToken === "string") {
@@ -103,7 +104,7 @@ export async function createClientImplementation(
 export async function deleteClientImplementation(id: number) {
   if (!id) {
     return NextResponse.json(
-      { error: "Client ID is required" },
+      { message: "Client ID is required" },
       { status: 400 }
     );
   }
@@ -125,9 +126,11 @@ export async function deleteClientImplementation(id: number) {
   return NextResponse.json({ message: "Cliente eliminado" }, { status: 200 });
 }
 
-export const updateClient = async (request: NextRequest) => {
+export const updateClient = async (
+  id: number,
+  data: Prisma.ClientsUpdateInput
+) => {
   try {
-    const { id, data } = await request.json();
     if (!id || !data) {
       return NextResponse.json(
         { error: "Client ID and data are required" },
@@ -135,24 +138,27 @@ export const updateClient = async (request: NextRequest) => {
       );
     }
 
-    const updatedClient = await prisma.clients.update({
-      where: id,
-      data,
+    const findClient = await prisma.clients.findUnique({
+      where: { id },
     });
-    if (!updatedClient) {
+    if (!findClient)
       return NextResponse.json(
-        { error: "Client not found or update failed" },
+        { message: "Cliente no encontrado" },
         { status: 404 }
       );
-    }
+
+    const updatedClient = await prisma.clients.update({
+      where: { id },
+      data,
+    });
 
     return NextResponse.json(
-      { message: "Client updated successfully", client: updatedClient },
+      { message: "Cliente actualizado", client: updatedClient },
       { status: 200 }
     );
   } catch {
     return NextResponse.json(
-      { error: "Failed to update client" },
+      { error: "Falló al actualizar el cliente" },
       { status: 500 }
     );
   }

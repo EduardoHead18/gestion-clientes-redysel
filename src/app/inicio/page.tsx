@@ -7,16 +7,19 @@ import { IClients } from "../../interfaces/interfaces";
 import { getAllClients } from "@/services/services-api";
 import { SearchComponent } from "../../components/personalized/SearchComponent";
 import { PaginationComponent } from "../../components/personalized/PaginationComponent";
-import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
-import { useStoreToken } from "@/hooks/useStore";
+import {
+  useStorePagination,
+  useStoreSearch,
+  useRefreshClientComponent,
+} from "@/hooks/useStore";
 import { IconPlus } from "@tabler/icons-react";
 
 //TODO: Prevent page changes if the page size is not greater than 20 data.
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
-  const { page, refresh } = useStorePagination();
+  const { page } = useStorePagination();
+  const { refreshClient } = useRefreshClientComponent();
   const { search } = useStoreSearch();
-  const { token } = useStoreToken();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,7 +27,6 @@ export default function ClientsPage() {
           page: page,
           pageLimit: 20,
           search: search,
-          token: token,
         });
         if (!Array.isArray(response)) setClients([]);
         else setClients(response);
@@ -34,7 +36,7 @@ export default function ClientsPage() {
     };
 
     fetchData();
-  }, [page, search, refresh]);
+  }, [page, search, refreshClient]);
 
   return (
     <div className="container mx-auto px-10">

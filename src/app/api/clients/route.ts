@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     return result;
   } catch (error) {
     return NextResponse.json(
-      { message: "Failed to create client", info: error },
+      { message: "Falló al crear un cliente ", info: error },
       { status: 500 }
     );
   }
@@ -55,7 +55,6 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-
 
 export const updateClient = async (request: NextRequest) => {
   try {

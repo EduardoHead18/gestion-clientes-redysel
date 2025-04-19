@@ -10,7 +10,6 @@ interface IClientsParams {
   page: number;
   pageLimit: number;
   search: string;
-  token: string;
 }
 
 //AUTH API
@@ -56,14 +55,12 @@ export const getAllClients = async ({
   page,
   pageLimit,
   search,
-  token,
 }: IClientsParams) => {
   const response = await fetch(
     `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`,
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     }
@@ -92,19 +89,39 @@ export const deleteClient = async (id: number) => {
   return { status: response.status, data: responseJson };
 };
 
+export const updateClientService = async ({
+  id,
+  active,
+}: {
+  id: number;
+  active: boolean;
+}) => {
+  const response = await fetch(`/api/clients/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ active }),
+  });
+  const responseJson = await response.json();
+  return responseJson;
+};
+
+export const getByIdClientService = async (id: number) => {
+  const response = await fetch(`/api/clients/${id}`);
+  const responseJson = await response.json();
+  return responseJson.data;
+};
+
 //TEMPORARY-CLIENTS API
 export const getAllTemporaryClients = async ({
   page,
   pageLimit,
   search,
-  token,
 }: IClientsParams) => {
   const response = await fetch(
     `api/temporary-clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`,
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     }

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   deleteClientImplementation,
   getClientByIdImplementation,
+  updateClient,
 } from "../../implementation/clients-implementation";
 
 export async function GET(
@@ -32,6 +33,23 @@ export async function DELETE(
   try {
     const id = parseInt(params.id, 10);
     const result = await deleteClientImplementation(id);
+    return result;
+  } catch {
+    return NextResponse.json(
+      { error: "Falló al eliminar el cliente" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const id = parseInt(params.id, 10);
+    const data = await req.json();
+    const result = await updateClient(id, data);
     return result;
   } catch {
     return NextResponse.json(
