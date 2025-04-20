@@ -1,4 +1,4 @@
-export const validateObject = (data:object) => {
+export const validateObject = (data: object) => {
   if (!data || Object.keys(data).length === 0) {
     return false;
   }
@@ -15,4 +15,14 @@ export const dateFormat = (date: string) => {
   const dateFormatted = `${day}/${month}/${year}`;
 
   return dateFormatted;
+};
+
+export const currentDate = () => {
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  const dateToday = `${day}/${month}/${year}`;
+  return dateToday;
 };
