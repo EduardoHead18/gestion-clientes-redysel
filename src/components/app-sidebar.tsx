@@ -25,7 +25,7 @@ import Link from "next/link";
 
 const data = {
   user: {
-    name: "shadcn",
+    name: "UserName",
     email: "m@example.com",
     avatar: "#",
   },

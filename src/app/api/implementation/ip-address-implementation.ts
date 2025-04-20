@@ -5,7 +5,19 @@ import { getCookie } from "../utils/cookies";
 import { decodeToken } from "../utils/tools";
 
 export async function getAllIpAdressImpl() {
-  const ipAdress = await prisma.ip_address.findMany();
+  const cookieToken = await getCookie();
+  const responseDecodeToken = decodeToken(cookieToken!);
+  let employeeZone = "";
+  //validate the zone from the token
+  if (typeof responseDecodeToken === "string") {
+    console.error("Error decoding token:", responseDecodeToken);
+  } else if ("zone" in responseDecodeToken) {
+    employeeZone = responseDecodeToken.zone;
+  }
+
+  const ipAdress = await prisma.ip_address.findMany({
+    where: { zone: employeeZone },
+  });
   return NextResponse.json({ data: ipAdress }, { status: 200 });
 }
 
