@@ -1,13 +1,4 @@
 "use client";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ITemporaryClient } from "@/interfaces/interfaces";
 import { useForm } from "react-hook-form";
 import { AlertError } from "@/components/personalized/AlertError";
@@ -21,8 +12,6 @@ export default function ClientsTemporaryPage() {
   const {
     register,
     handleSubmit,
-    setValue,
-    trigger,
     formState: { errors },
   } = useForm<ITemporaryClient>();
   const [errorBadge, setErrorBadge] = useState<boolean>(false);
@@ -115,36 +104,6 @@ export default function ClientsTemporaryPage() {
                 />
                 {errors.phone_number?.message &&
                   AlertError({ message: String(errors.phone_number?.message) })}
-              </div>
-
-              <div className="flex flex-col">
-                <Select
-                  {...register("zone", { required: "La zona es obligatoria" })}
-                  onValueChange={(value) => {
-                    setValue("zone", value, { shouldValidate: true });
-                    trigger("zone");
-                  }}
-                >
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Elegir zona
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Asignar rol" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>zonas</SelectLabel>
-                        <SelectItem value="chilon">Chilon</SelectItem>
-                        <SelectItem value="ocosingo">Ocosingo</SelectItem>
-                        <SelectItem value="petalcingo">Petalcingo</SelectItem>
-                        <SelectItem value="yajalon">Yajalon</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </label>
-                </Select>
-                {errors.zone &&
-                  AlertError({
-                    message: String(errors.zone.message),
-                  })}
               </div>
             </div>
 
