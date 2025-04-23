@@ -76,8 +76,8 @@ export function DataTableCashClosing<TData, TValue>({
           )}
         </TableBody>
       </Table>
-        {/**TODO: Add the total for each card like here */}
-        <h1>Totalum</h1>
+      {/**TODO: Add the total for each card like here */}
+      <h1>Totalum</h1>
     </div>
   );
 }
