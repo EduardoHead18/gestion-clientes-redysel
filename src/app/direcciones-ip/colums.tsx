@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { IPadress } from "../../interfaces/interfaces";
 import { BadgeStatus } from "../../components/personalized/BadgeStatus";
-import DropMenuComponent from "../../components/personalized/DropMenuComponent";
+import DropMenuComponent from "../../components/personalized/DropMenus/DropMenuComponent";
 import { deleteIpAdressService } from "@/services/services-api";
 
 const deleteIpAdressFunc = async (id: number) => {

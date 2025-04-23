@@ -1,14 +1,12 @@
 "use client";
-
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
-import { AlertModal } from "./AlertModal";
+import { AlertModal } from "../AlertModal";
 import { useState } from "react";
 import {
   useRefreshIpAdressApi,
@@ -18,14 +16,14 @@ import {
 interface DropMenuComponentProps {
   id: number;
   functionProp: () => Promise<void>;
-  activeClient?: boolean;
+  cotractFunctionProp: () => Promise<void>;
 }
 
-type ActionType = "cancel" | "delete" | null;
+type ActionType = "contract" | "delete" | null;
 
-export default function DropMenuComponent({
+export default function DropMenuTempClient({
   functionProp,
-  activeClient,
+  cotractFunctionProp,
 }: DropMenuComponentProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState<ActionType>(null);
@@ -33,24 +31,22 @@ export default function DropMenuComponent({
   const { refreshFunctionClient } = useRefreshClientComponent();
 
   const getModalTitle = () => {
-    if (actionType === "cancel") {
-      return activeClient
-        ? "¿Quieres cancelar el servicio?"
-        : "¿Quieres reactivar el servicio?";
+    if (actionType === "contract") {
+      return "¿Quieres crear el cliente y el contrato?";
     }
-    if (actionType === "delete")
-      return "¿Estás seguro de que quieres eliminar?";
+    if (actionType === "delete") {
+      return "¿Estás seguro de que quieres eliminarlo?";
+    }
     return "";
   };
 
   const getModalMessage = () => {
-    if (actionType === "cancel") {
-      return activeClient
-        ? "Esta acción cancelará el servicio del cliente."
-        : "Esta acción reactivará el servicio del cliente.";
+    if (actionType === "contract") {
+      return "Esta acción creará un cliente y su contrato asociado.";
     }
-    if (actionType === "delete")
-      return "Esta acción eliminará al cliente permanentemente. No se puede deshacer.";
+    if (actionType === "delete") {
+      return "Esta acción eliminará al cliente temporal permanentemente. No se puede deshacer.";
+    }
     return "";
   };
 
@@ -61,17 +57,13 @@ export default function DropMenuComponent({
           <IconDotsVertical size={30} className="py-1 flex opacity-40" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => alert("editar")}>
-            Editar
-          </DropdownMenuItem>
-
           <DropdownMenuItem
             onClick={() => {
-              setActionType("cancel");
+              setActionType("contract");
               setIsModalOpen(true);
             }}
           >
-            {activeClient ? "Cancelar servicio" : "Reactivar servicio"}
+            Crear contrato
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -82,9 +74,6 @@ export default function DropMenuComponent({
           >
             Eliminar
           </DropdownMenuItem>
-
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Agregar pago</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -98,13 +87,14 @@ export default function DropMenuComponent({
         message={getModalMessage()}
         textButtonOption="Confirmar"
         action={async () => {
-          await functionProp();
+          if (actionType === "contract") {
+            await cotractFunctionProp();
+          } else if (actionType === "delete") {
+            await functionProp();
+          }
 
           refreshFunction();
-
-          if (actionType === "cancel") {
-            refreshFunctionClient();
-          }
+          refreshFunctionClient();
         }}
       />
     </div>

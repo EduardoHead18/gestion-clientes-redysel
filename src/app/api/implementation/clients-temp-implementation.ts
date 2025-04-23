@@ -78,7 +78,22 @@ export async function getClientsTempImplementation(data: IGetClients) {
 export async function createClientTempImplementation(
   data: Prisma.TemporaryClientsCreateInput
 ) {
-  const result = await prisma.temporaryClients.create({ data });
+  //getCookie token
+  const cookie = await getCookie();
+
+  const decodeTokenFunc = decodeToken(cookie!);
+  let employeeZone = "";
+
+  //validate the zone from the token
+  if (typeof decodeTokenFunc === "string") {
+    console.error("Error decoding token:", decodeTokenFunc);
+  } else if ("zone" in decodeTokenFunc) {
+    employeeZone = decodeTokenFunc.zone;
+  }
+  const newClientObject = { ...data, zone: employeeZone };
+  const result = await prisma.temporaryClients.create({
+    data: newClientObject,
+  });
   return NextResponse.json({ data: result }, { status: 201 });
 }
 

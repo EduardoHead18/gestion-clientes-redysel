@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { IClients } from "../../interfaces/interfaces";
 import { dateFormat, validateObject } from "../../utils/tools";
 import { BadgeStatus } from "../../components/personalized/BadgeStatus";
-import DropMenuComponent from "../../components/personalized/DropMenuComponent";
+import DropMenuComponent from "../../components/personalized/DropMenus/DropMenuComponent";
 import {
   getByIdClientService,
   updateClientService,
