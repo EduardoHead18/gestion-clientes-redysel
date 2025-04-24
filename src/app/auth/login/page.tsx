@@ -25,6 +25,7 @@ export default function Auth() {
       const response = await loginAuth(data);
       if (response?.status === 200) {
         setTimeout(() => {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
           router.push("/inicio");
         }, 1000);
       }

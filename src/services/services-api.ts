@@ -37,6 +37,11 @@ export const getServerCookie = async () => {
   }
 };
 
+export const logoutAuthService = async () => {
+  const response = await fetch("/api/auth/logout");
+  return { status: response.status };
+};
+
 //EMPLOYEES API
 export const createEmployeeApi = async (body: IEmployee) => {
   const response = await fetch("/api/employees", {

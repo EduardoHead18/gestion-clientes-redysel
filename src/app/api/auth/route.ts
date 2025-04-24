@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     if (!findEmployee) {
       return NextResponse.json(
-        { message: "Usuario no encontrado" },
+        { message: "Empelado no encontrado" },
         { status: 404 }
       );
     }
@@ -64,7 +64,15 @@ export async function POST(req: NextRequest) {
     await setCookie(token);
 
     return NextResponse.json(
-      { message: "Inicio de sesión exitoso", token },
+      {
+        message: "Inicio de sesión exitoso",
+        user: {
+          name: findEmployee.name,
+          lastName: findEmployee.last_name,
+          email: findEmployee.email,
+          zone: findEmployee.zone,
+        },
+      },
       { status: 200 }
     );
   } catch (error) {

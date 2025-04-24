@@ -14,3 +14,8 @@ export async function getCookie() {
   const cookieStore = await cookies();
   return cookieStore.get("token")?.value;
 }
+
+export async function deleteCookie(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
+}

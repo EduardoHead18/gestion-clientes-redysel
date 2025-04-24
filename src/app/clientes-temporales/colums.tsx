@@ -65,7 +65,6 @@ const createClientAndContract = async (id: number) => {
       return alert("No hay Direcciones IP disponibles, registra una nueva");
     const ipAddressId = responseAddress.id;
 
-    console.log("hole");
     const newClient: Partial<IClients> = {
       name: response.name ?? "",
       last_name: response.last_name ?? "",

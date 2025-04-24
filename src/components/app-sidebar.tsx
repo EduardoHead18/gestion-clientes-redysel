@@ -22,51 +22,59 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-
-const data = {
-  user: {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState({
     name: "UserName",
     email: "m@example.com",
-    avatar: "#",
-  },
-  navMain: [
-    {
-      title: "Clientes",
-      url: "/clientes/",
-      icon: IconUsers,
-    },
-    {
-      title: "Clientes temporales",
-      url: "/clientes-temporales/",
-      icon: IconUsers,
-    },
-    {
-      title: "Pagos",
-      url: "/pagos/",
-      icon: IconBrandCashapp,
-    },
-    {
-      title: "Direcciones IP",
-      url: "/direcciones-ip/",
-      icon: IconList,
-    },
-  ],
+    zone: "idk",
+  });
 
-  navSecondary: [
-    {
-      title: "Configuración",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Cerrar sesión",
-      url: "#",
-      icon: IconTransferOut,
-    },
-  ],
-};
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const data = {
+    user,
+    navMain: [
+      {
+        title: "Clientes",
+        url: "/clientes/",
+        icon: IconUsers,
+      },
+      {
+        title: "Clientes temporales",
+        url: "/clientes-temporales/",
+        icon: IconUsers,
+      },
+      {
+        title: "Pagos",
+        url: "/pagos/",
+        icon: IconBrandCashapp,
+      },
+      {
+        title: "Direcciones IP",
+        url: "/direcciones-ip/",
+        icon: IconList,
+      },
+    ],
+
+    navSecondary: [
+      {
+        title: "Configuración",
+        url: "#",
+        icon: IconSettings,
+      },
+      {
+        title: "Cerrar sesión",
+        url: "#",
+        icon: IconTransferOut,
+      },
+    ],
+  };
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -87,7 +95,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavDocuments items={data.documents} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
