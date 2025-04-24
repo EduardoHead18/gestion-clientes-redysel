@@ -7,16 +7,30 @@ import { useState } from "react";
 import LayoutHome from "../../inicio/layout";
 import { createTemporaryClient } from "@/services/services-api";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useRefreshTemporaryClientComponent } from "@/hooks/useStore";
 
 export default function ClientsTemporaryPage() {
   const {
     register,
     handleSubmit,
+    setValue,
+    trigger,
     formState: { errors },
   } = useForm<ITemporaryClient>();
   const [errorBadge, setErrorBadge] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
+  const { refreshFunctionTemporaryClient } =
+    useRefreshTemporaryClientComponent();
 
   const onSubmit = async (data: ITemporaryClient) => {
     const sendData = {
@@ -25,8 +39,7 @@ export default function ClientsTemporaryPage() {
     };
     const response = await createTemporaryClient(sendData);
     if (response?.status === 201) {
-      setErrorMessage("Cliente registrado");
-      setErrorBadge(true);
+      refreshFunctionTemporaryClient();
       return router.push("/clientes-temporales");
     } else {
       setErrorMessage("error en el servidor");
@@ -80,31 +93,60 @@ export default function ClientsTemporaryPage() {
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-3">
-              <div className="mb-8 w-full">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Numero de telefono
-                </label>
-                <input
-                  {...register("phone_number", {
-                    required: "El telefono es obligatorio",
-                    minLength: {
-                      value: 10,
-                      message: "El teléfono debe tener al menos 10 dígitos",
-                    },
-                    maxLength: {
-                      value: 10,
-                      message: "El teléfono no puede tener más de 10 dígitos",
-                    },
-                  })}
-                  type="tel"
-                  id="number"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="9191234567"
-                />
-                {errors.phone_number?.message &&
-                  AlertError({ message: String(errors.phone_number?.message) })}
+            <div className="flex flex-row items-center gap-5">
+              <div className="flex flex-col md:flex-row gap-3">
+                <div className="mb-8 w-full">
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Numero de telefono
+                  </label>
+                  <input
+                    {...register("phone_number", {
+                      required: "El telefono es obligatorio",
+                      minLength: {
+                        value: 10,
+                        message: "El teléfono debe tener al menos 10 dígitos",
+                      },
+                      maxLength: {
+                        value: 10,
+                        message: "El teléfono no puede tener más de 10 dígitos",
+                      },
+                    })}
+                    type="tel"
+                    id="number"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="9191234567"
+                  />
+                  {errors.phone_number?.message &&
+                    AlertError({
+                      message: String(errors.phone_number?.message),
+                    })}
+                </div>
               </div>
+
+              <Select
+                {...register("service", {
+                  required: "El servicio es obligatorio",
+                })}
+                onValueChange={(value) => {
+                  setValue("service", Number(value), { shouldValidate: true });
+                  trigger("service");
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Elegir servicio" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Servicios</SelectLabel>
+                    <SelectItem value="300">300</SelectItem>
+                    <SelectItem value="500">500</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors.service &&
+                AlertError({
+                  message: String(errors.service.message),
+                })}
             </div>
 
             <div className="flex justify-center mb-10">

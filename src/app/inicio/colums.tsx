@@ -52,13 +52,11 @@ export const columns: ColumnDef<IClients>[] = [
   },
   {
     accessorKey: "service",
-    cell: ({ row }) => {
-      const contracts = row.original.contracts;
-      return contracts?.length > 0
-        ? `$${contracts[0].service}`
-        : "Sin servicio";
-    },
     header: "Servicio",
+  },
+  {
+    accessorKey: "ip_address.ip_address",
+    header: "ip_address",
   },
   {
     accessorKey: "payment_date",
@@ -71,7 +69,7 @@ export const columns: ColumnDef<IClients>[] = [
   {
     accessorKey: "zone",
     cell: ({ row }) => {
-      const zone = row.original.zone
+      const zone = row.original.zone;
       return zone;
     },
     header: "Zona",

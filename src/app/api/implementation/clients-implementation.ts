@@ -45,6 +45,7 @@ export async function getClientsImplementation(data: IGetClients) {
         include: {
           contracts: true,
           payments: true,
+          ip_address: true,
         },
       });
       return NextResponse.json({ data: clients }, { status: 200 });
@@ -67,6 +68,7 @@ export async function getClientsImplementation(data: IGetClients) {
       include: {
         contracts: true,
         payments: true,
+        ip_address: true,
       },
     });
 

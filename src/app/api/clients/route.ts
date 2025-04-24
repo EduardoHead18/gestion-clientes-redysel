@@ -34,9 +34,9 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     const result = await createClientImplementation(data);
     return result;
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { message: "Falló al crear un cliente ", info: error },
+      { message: "Falló al crear un cliente " },
       { status: 500 }
     );
   }

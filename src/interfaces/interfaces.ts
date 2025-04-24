@@ -28,6 +28,7 @@ export interface ITemporaryClient {
   phone_number: string;
   zone: string;
   payment_date: string;
+  service?: number;
 }
 
 export interface IClients {
@@ -35,8 +36,13 @@ export interface IClients {
   name: string;
   last_name: string;
   phone_number?: string;
-  ip_address_id: number;
+  ip_address: {
+    connect: {
+      id: number;
+    };
+  };
   zone: string;
+  service: number;
   contracts: IContracts[];
   active: boolean;
   payment_date: string;

@@ -69,7 +69,10 @@ const createClientAndContract = async (id: number) => {
       name: response.name ?? "",
       last_name: response.last_name ?? "",
       phone_number: response.phone_number ?? "",
-      ip_address_id: ipAddressId,
+      ip_address: {
+        connect: { id: ipAddressId },
+      },
+      service: parseFloat(response.service ?? 0),
       zone: response.zone ?? "",
       payment_date: new Date().toISOString(),
       active: true,
@@ -99,10 +102,13 @@ export const columns: ColumnDef<ITemporaryClient>[] = [
     accessorKey: "last_name",
     header: "Apellidos",
   },
-
   {
     accessorKey: "phone_number",
     header: "Numero de telefono",
+  },
+  {
+    accessorKey: "service",
+    header: "servicio",
   },
   {
     accessorKey: "zone",

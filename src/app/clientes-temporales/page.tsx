@@ -9,12 +9,17 @@ import { useEffect, useState } from "react";
 import { getAllTemporaryClients } from "@/services/services-api";
 import { ITemporaryClient } from "@/interfaces/interfaces";
 import Link from "next/link";
-import { useStorePagination, useStoreSearch } from "@/hooks/useStore";
+import {
+  useStorePagination,
+  useStoreSearch,
+  useRefreshTemporaryClientComponent,
+} from "@/hooks/useStore";
 
 export default function ClientesTemporalesPage() {
   const [clients, setClients] = useState<ITemporaryClient[]>([]);
   const { page, refresh } = useStorePagination();
   const { search } = useStoreSearch();
+  const { refreshTemporaryClient } = useRefreshTemporaryClientComponent();
 
   const getAllClientsTemp = async () => {
     try {
@@ -31,7 +36,7 @@ export default function ClientesTemporalesPage() {
   };
   useEffect(() => {
     getAllClientsTemp();
-  }, [page, search, refresh]);
+  }, [page, search, refresh, refreshTemporaryClient]);
   return (
     <LayoutHome>
       <div className="container mx-auto px-10">

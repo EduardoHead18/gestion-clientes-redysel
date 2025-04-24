@@ -33,6 +33,10 @@ export interface IRefreshIpAdressApi {
   refreshFunction: () => void;
 }
 
+export interface IRefreshTemporaryClient {
+  refreshTemporaryClient: boolean;
+  refreshFunctionTemporaryClient: () => void;
+}
 export const useStorePagination = create<IPagination>((set) => ({
   page: 1,
   refresh: false,
@@ -67,6 +71,15 @@ export const useRefreshClientComponent = create<IRefreshClientComponent>(
       set((state) => ({ refreshClient: !state.refreshClient })),
   })
 );
+
+export const useRefreshTemporaryClientComponent =
+  create<IRefreshTemporaryClient>((set) => ({
+    refreshTemporaryClient: false,
+    refreshFunctionTemporaryClient: () =>
+      set((state) => ({
+        refreshTemporaryClient: !state.refreshTemporaryClient,
+      })),
+  }));
 
 export const useRefreshIpAdressApi = create<IRefreshIpAdressApi>((set) => ({
   refresh: false,

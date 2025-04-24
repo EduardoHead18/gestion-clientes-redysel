@@ -8,10 +8,7 @@ import {
 import { IconDotsVertical } from "@tabler/icons-react";
 import { AlertModal } from "../AlertModal";
 import { useState } from "react";
-import {
-  useRefreshIpAdressApi,
-  useRefreshClientComponent,
-} from "@/hooks/useStore";
+import { useRefreshTemporaryClientComponent } from "@/hooks/useStore";
 
 interface DropMenuComponentProps {
   id: number;
@@ -27,8 +24,8 @@ export default function DropMenuTempClient({
 }: DropMenuComponentProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState<ActionType>(null);
-  const { refreshFunction } = useRefreshIpAdressApi();
-  const { refreshFunctionClient } = useRefreshClientComponent();
+  const { refreshFunctionTemporaryClient } =
+    useRefreshTemporaryClientComponent();
 
   const getModalTitle = () => {
     if (actionType === "contract") {
@@ -92,9 +89,7 @@ export default function DropMenuTempClient({
           } else if (actionType === "delete") {
             await functionProp();
           }
-
-          refreshFunction();
-          refreshFunctionClient();
+          refreshFunctionTemporaryClient();
         }}
       />
     </div>
