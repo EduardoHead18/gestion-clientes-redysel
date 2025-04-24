@@ -51,6 +51,7 @@ export const columns: ColumnDef<IClients>[] = [
     header: "Apellidos",
   },
   {
+    accessorKey: "service",
     cell: ({ row }) => {
       const contracts = row.original.contracts;
       return contracts?.length > 0
@@ -66,6 +67,14 @@ export const columns: ColumnDef<IClients>[] = [
       return dateFormatted;
     },
     header: "Fecha de pago",
+  },
+  {
+    accessorKey: "zone",
+    cell: ({ row }) => {
+      const zone = row.original.zone
+      return zone;
+    },
+    header: "Zona",
   },
   {
     accessorKey: "status_payment",
