@@ -1,11 +1,10 @@
 "use client";
-
 import * as React from "react";
 import {
   IconBrandCashapp,
   IconList,
   IconSettings,
-  IconTransferOut,
+  IconLogout,
   IconUsers,
 } from "@tabler/icons-react";
 
@@ -22,12 +21,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { logoutAuthService } from "@/services/services-api";
+import { useRouter } from "next/navigation";
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState({
     name: "UserName",
     email: "m@example.com",
     zone: "idk",
   });
+  const router = useRouter();
 
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -35,6 +38,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  const logOut = async () => {
+    try {
+      const response = await logoutAuthService();
+      if (response.status == 200) {
+        localStorage.removeItem("user");
+        return router.push("/auth/login");
+      }
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
   const data = {
     user,
@@ -66,11 +81,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Configuración",
         url: "#",
         icon: IconSettings,
+        function: () => alert("Configuración"),
       },
       {
         title: "Cerrar sesión",
         url: "#",
-        icon: IconTransferOut,
+        icon: IconLogout,
+        function: () => logOut(),
       },
     ],
   };

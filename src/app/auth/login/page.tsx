@@ -62,20 +62,20 @@ export default function Auth() {
   }, [router]);
 
   return token ? (
-    <section className="flex flex-col md:flex-row h-[100vh]">
-      <div className="invisible md:visible md:flex-1 bg-black text-white flex items-center justify-center">
-        <div className="flex flex-col items-center ">
+    <section className="flex flex-col md:flex-row h-full md:h-[100vh]">
+      <div className="hidden md:flex md:flex-1 bg-black text-white items-center justify-center">
+        <div className="flex flex-col items-center">
           <h1 className="text-2xl font-bold">Redysel</h1>
           <Image
             src={"/network.png"}
             alt="redysel chiapas - servicios de internet"
             width={400}
             height={400}
-          ></Image>
+          />
         </div>
       </div>
 
-      <div className="flex-1 p-10 rounded-lg shadow-sm sm:w-full flex items-center justify-center">
+      <div className="md:flex-1 p-10 rounded-lg shadow-sm sm:w-full flex items-center justify-center">
         <div className="w-full max-w-md">
           <h1 className="lg:text-2xl font-bold mb-10">Iniciar sesión</h1>
           <form onSubmit={handleSubmit(onSubmit)}>
