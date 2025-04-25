@@ -91,7 +91,6 @@ export const columns: ColumnDef<IClients>[] = [
     accessorKey: "status_payment",
     cell: ({ row }) => {
       const getPayment = validateObject(row.original.payments);
-      console.log(row.original.payments);
       if (!getPayment) {
         return <BadgeStatus textMessage={"No pagado"} variant="destructive" />;
       }
