@@ -1,11 +1,11 @@
 "use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { IClients } from "../../interfaces/interfaces";
-import { dateFormat, validateObject } from "../../utils/tools";
+import { currentDate, dateFormat, validateObject } from "../../utils/tools";
 import { BadgeStatus } from "../../components/personalized/BadgeStatus";
 import DropMenuComponent from "../../components/personalized/DropMenus/DropMenuComponent";
 import {
+  createPaymentService,
   getByIdClientService,
   updateClientService,
 } from "@/services/services-api";
@@ -34,6 +34,19 @@ const disableClient = async (id: number) => {
   } catch (error) {
     alert("Error en el servidor");
     console.error(error);
+  }
+};
+
+const addPayment = async (id: number) => {
+  const datePayment = currentDate();
+  try {
+    const response = await createPaymentService({
+      clients_id: id,
+      payment_date: datePayment,
+    });
+    return alert(response.data.message);
+  } catch {
+    alert("Error en el servidor al crear el pago ");
   }
 };
 
@@ -78,6 +91,7 @@ export const columns: ColumnDef<IClients>[] = [
     accessorKey: "status_payment",
     cell: ({ row }) => {
       const getPayment = validateObject(row.original.payments);
+      console.log(row.original.payments);
       if (!getPayment) {
         return <BadgeStatus textMessage={"No pagado"} variant="destructive" />;
       }
@@ -104,8 +118,11 @@ export const columns: ColumnDef<IClients>[] = [
         return (
           <DropMenuComponent
             id={clientId}
-            functionProp={() => {
+            functionCancelService={() => {
               return disableClient(clientId);
+            }}
+            functionAddPayment={() => {
+              return addPayment(clientId);
             }}
             activeClient={activeClient}
           />

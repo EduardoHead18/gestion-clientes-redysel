@@ -9,46 +9,47 @@ import {
 import { IconDotsVertical } from "@tabler/icons-react";
 import { AlertModal } from "../AlertModal";
 import { useState } from "react";
-import {
-  useRefreshIpAdressApi,
-  useRefreshClientComponent,
-} from "@/hooks/useStore";
+import { useRefreshClientComponent } from "@/hooks/useStore";
 
 interface DropMenuComponentProps {
   id: number;
-  functionProp: () => Promise<void>;
   activeClient?: boolean;
+  functionCancelService: () => Promise<void>;
+  functionAddPayment: () => Promise<void>;
 }
 
-type ActionType = "cancel" | "delete" | null;
+type ActionType = "cancel-service" | "delete-client" | "add-payment" | null;
 
 export default function DropMenuComponent({
-  functionProp,
   activeClient,
+  functionCancelService,
+  functionAddPayment,
 }: DropMenuComponentProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState<ActionType>(null);
-  const { refreshFunction } = useRefreshIpAdressApi();
   const { refreshFunctionClient } = useRefreshClientComponent();
 
   const getModalTitle = () => {
-    if (actionType === "cancel") {
+    if (actionType === "cancel-service") {
       return activeClient
         ? "¿Quieres cancelar el servicio?"
         : "¿Quieres reactivar el servicio?";
     }
-    if (actionType === "delete")
+    if (actionType === "add-payment") return "¿Quieres agregar un pago?";
+    if (actionType === "delete-client")
       return "¿Estás seguro de que quieres eliminar?";
     return "";
   };
 
   const getModalMessage = () => {
-    if (actionType === "cancel") {
+    if (actionType === "cancel-service") {
       return activeClient
         ? "Esta acción cancelará el servicio del cliente."
         : "Esta acción reactivará el servicio del cliente.";
     }
-    if (actionType === "delete")
+    if (actionType === "add-payment")
+      return "Esta acción agregará un pago al cliente.";
+    if (actionType === "delete-client")
       return "Esta acción eliminará al cliente permanentemente. No se puede deshacer.";
     return "";
   };
@@ -66,24 +67,31 @@ export default function DropMenuComponent({
 
           <DropdownMenuItem
             onClick={() => {
-              setActionType("cancel");
+              setActionType("cancel-service");
               setIsModalOpen(true);
             }}
           >
             {activeClient ? "Cancelar servicio" : "Reactivar servicio"}
           </DropdownMenuItem>
 
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onClick={() => {
-              setActionType("delete");
+              setActionType("delete-client");
               setIsModalOpen(true);
             }}
           >
             Eliminar
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Agregar pago</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setActionType("add-payment");
+              setIsModalOpen(true);
+            }}
+          >
+            Agregar pago
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -97,13 +105,10 @@ export default function DropMenuComponent({
         message={getModalMessage()}
         textButtonOption="Confirmar"
         action={async () => {
-          await functionProp();
+          if (actionType === "cancel-service") await functionCancelService();
+          if (actionType === "add-payment") await functionAddPayment();
 
-          refreshFunction();
-
-          if (actionType === "cancel") {
-            refreshFunctionClient();
-          }
+          refreshFunctionClient();
         }}
       />
     </div>

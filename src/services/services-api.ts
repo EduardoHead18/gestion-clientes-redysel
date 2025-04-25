@@ -12,6 +12,11 @@ interface IClientsParams {
   search: string;
 }
 
+interface ICreatePaymentData {
+  clients_id: number;
+  payment_date: string;
+}
+
 //AUTH API
 export const loginAuth = async (body: object) => {
   const response = await fetch("/api/auth", {
@@ -206,4 +211,17 @@ export const updateIpAddressService = async ({
   });
 
   return response.json();
+};
+
+// PAYMENTS API
+export const createPaymentService = async (data: ICreatePaymentData) => {
+  const response = await fetch("/api/payments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const responseJson = await response.json();
+  return { status: response.status, data: responseJson };
 };
