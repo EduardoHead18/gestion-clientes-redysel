@@ -8,7 +8,6 @@ import {
   useStoreSearch,
   useRefreshClientComponent,
 } from "@/hooks/useStore";
-import LayoutHome from "../inicio/layout";
 import { DataTableIncome } from "./income/data-table-income";
 import { columnsIncome } from "./income/colums";
 import { currentDate } from "@/utils/tools";
@@ -43,21 +42,19 @@ export default function PagosPage() {
   }, [page, search, refreshClient]);
 
   return (
-    <LayoutHome>
-      <div className="container mx-auto px-10">
-        <div className="flex flex-col justify-end mb-4">
-          <div className="flex md:flex-row items-end justify-between">
-            <h1 className="md:text-2xl font-semibold mb-5">Pagos</h1>
-            <h2 className="md:text-xl font-semibold mb-5">{date}</h2>
-          </div>
+    <div className="container mx-auto px-10">
+      <div className="flex flex-col justify-end mb-4">
+        <div className="flex md:flex-row items-end justify-between">
+          <h1 className="md:text-2xl font-semibold mb-5">Pagos</h1>
+          <h2 className="md:text-xl font-semibold mb-5">{date}</h2>
         </div>
-
-        <section className="grid gap-7">
-          <DataTableIncome columns={columnsIncome} data={clients} />
-          <DataTableExpenses columns={columnsExpenses} data={clients} />
-          <DataTableCashClosing columns={columnsCashClosing} data={clients} />
-        </section>
       </div>
-    </LayoutHome>
+
+      <section className="grid gap-7">
+        <DataTableIncome columns={columnsIncome} data={clients} />
+        <DataTableExpenses columns={columnsExpenses} data={clients} />
+        <DataTableCashClosing columns={columnsCashClosing} data={clients} />
+      </section>
+    </div>
   );
 }

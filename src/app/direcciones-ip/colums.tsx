@@ -1,5 +1,4 @@
 "use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { IPadress } from "../../interfaces/interfaces";
 import { BadgeStatus } from "../../components/personalized/BadgeStatus";
@@ -41,6 +40,7 @@ export const columns: ColumnDef<IPadress>[] = [
       if (!ipAdressId) return null;
       if (ipAdressId)
         return (
+          //TODO: create a new Dropmenu for this component
           <DropMenuComponent
             id={ipAdressId}
             functionProp={() => {

@@ -1,4 +1,4 @@
-import LayoutHome from "../inicio/layout";
+import LayoutHome from "../inicio/layout/layout";
 import ClientsPage from "../inicio/page";
 
 export default function page() {

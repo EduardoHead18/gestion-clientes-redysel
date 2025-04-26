@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import LayoutHome from "./layout/layout";
+import LayoutHome from "../inicio/layout/layout";
 
 export default async function LayoutWrapper({
   children,

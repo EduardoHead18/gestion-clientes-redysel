@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "./data-table";
 import { columns } from "./colums";
 import { IClients } from "../../interfaces/interfaces";
-import { getAllClients } from "@/services/services-api";
+import { getAllClients, getServerCookie } from "@/services/services-api";
 import { SearchComponent } from "../../components/personalized/SearchComponent";
 import { PaginationComponent } from "../../components/personalized/PaginationComponent";
 import {
@@ -12,13 +12,15 @@ import {
   useStoreSearch,
   useRefreshClientComponent,
 } from "@/hooks/useStore";
-
+import { useRouter } from "next/navigation";
 //TODO: Prevent page changes if the page size is not greater than 20 data.
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
+  const router = useRouter();
   const { page } = useStorePagination();
   const { refreshClient } = useRefreshClientComponent();
   const { search } = useStoreSearch();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,6 +36,13 @@ export default function ClientsPage() {
       }
     };
 
+    const getCookieServer = async () => {
+      const response = await getServerCookie();
+      if (typeof response === "boolean") {
+        if (response !== true) return router.push("/auth/login");
+      }
+    };
+    getCookieServer();
     fetchData();
   }, [page, search, refreshClient]);
 

@@ -1,12 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  IClients,
-  IPadress,
-  ITemporaryClient,
-} from "../../interfaces/interfaces";
-import { dateFormat } from "../../utils/tools";
+import { IClients, IPadress, ITemporaryClient } from "@/interfaces/interfaces";
+import { dateFormat } from "@/utils/tools";
 import DropMenuTempClient from "@/components/personalized/DropMenus/DropMenuTempClients";
 import {
   createClient,
