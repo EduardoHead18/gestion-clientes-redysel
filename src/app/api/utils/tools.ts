@@ -27,3 +27,17 @@ export function decodeToken(
     return `Error en el servidor + ${error}`;
   }
 }
+
+export const randomCodeUuid = (): number => {
+  const num = 9;
+  const randomCode: number[] = [];
+
+  for (let i = 0; i < 4; i++) {
+    const randomTemp = Math.floor(Math.random() * num);
+    randomCode.push(randomTemp);
+  }
+  const codeString: string = randomCode.join("");
+  const codeNumber: number = parseInt(codeString, 10);
+  return codeNumber;
+};
+

@@ -13,6 +13,7 @@ import {
   useRefreshClientComponent,
 } from "@/hooks/useStore";
 import { useRouter } from "next/navigation";
+import { CheckBoxFilter } from "@/components/personalized/CheckBoxFilter";
 //TODO: Prevent page changes if the page size is not greater than 20 data.
 export default function ClientsPage() {
   const [clients, setClients] = useState<IClients[]>([]);
@@ -51,9 +52,9 @@ export default function ClientsPage() {
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold mb-5">Clientes</h1>
       </div>
-
-      <div className="flex flex-col md:flex-row w-full">
+      <div className="flex flex-col gap-10 md:flex-row w-full">
         <SearchComponent />
+        <CheckBoxFilter />
         <PaginationComponent />
       </div>
       <DataTable columns={columns} data={clients} />
