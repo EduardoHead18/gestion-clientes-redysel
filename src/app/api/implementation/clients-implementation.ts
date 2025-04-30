@@ -10,9 +10,10 @@ interface IGetClients {
   searchParam?: string | null;
   page?: number;
   pageLimit?: number;
+  payDay?: number;
 }
 export async function getClientsImplementation(data: IGetClients) {
-  const { searchParam, typeParam } = data;
+  const { searchParam, typeParam, payDay } = data;
   // Check if the token is valid
   const cookieToken = await getCookie();
   const responseDecodeToken = decodeToken(cookieToken!);
@@ -28,9 +29,41 @@ export async function getClientsImplementation(data: IGetClients) {
   }
   const page = data.page ?? 1;
   const pageLimit = data.pageLimit ?? 10;
-  if (typeParam === "clients") {
-    const skip = (page - 1) * pageLimit;
 
+  // validate date
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endOfMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0,
+    23,
+    59,
+    59
+  );
+
+  let dateFilter;
+  // validate day of payment
+  if (payDay === 15) {
+    //day 15
+    dateFilter = {
+      gte: startOfMonth,
+      lte: new Date(now.getFullYear(), now.getMonth(), 15, 23, 59, 59),
+    };
+  } else if (payDay === endOfMonth.getDate()) {
+    //last day of month
+    dateFilter = {
+      gte: new Date(now.getFullYear(), now.getMonth(), 16),
+      lte: endOfMonth,
+    };
+  } else if (payDay === 0) {
+    //all days
+    dateFilter = undefined;
+  }
+
+  if (typeParam === "clients") {
+    //search clientes without filter
+    const skip = (page - 1) * pageLimit;
     if (
       searchParam === "" ||
       searchParam === undefined ||
@@ -41,7 +74,9 @@ export async function getClientsImplementation(data: IGetClients) {
         take: pageLimit,
         where: {
           zone: employeeZone,
+          payment_date: dateFilter,
         },
+
         include: {
           contracts: true,
           payments: true,
@@ -51,12 +86,13 @@ export async function getClientsImplementation(data: IGetClients) {
       return NextResponse.json({ data: clients }, { status: 200 });
     }
 
+    //search clients with filter
     const clients = await prisma.clients.findMany({
       skip,
       take: pageLimit,
       where: {
         AND: [
-          { zone: employeeZone },
+          { zone: employeeZone, payment_date: dateFilter },
           {
             OR: [
               { name: { contains: searchParam || undefined } },

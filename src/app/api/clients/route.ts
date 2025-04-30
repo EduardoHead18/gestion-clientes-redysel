@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
       page: parseInt(searchParams.get("page") || "1", 10),
       pageLimit: parseInt(searchParams.get("pageLimit") || "10", 10),
       tokenHeader: tokenHeader,
+      payDay: parseInt(searchParams.get("payDay") || "0", 10),
     };
     const result = await getClientsImplementation(dataObjectTransfer);
     return result;

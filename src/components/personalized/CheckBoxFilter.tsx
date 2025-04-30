@@ -1,12 +1,13 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
 
-export const CheckBoxFilter = () => {
-  const [selectedValue, setSelectedValue] = useState("option-one");
+interface CheckBoxFilterProps {
+  onChange: (value: string) => void; // Prop para devolver el valor al padre
+}
 
+export const CheckBoxFilter = ({ onChange }: CheckBoxFilterProps) => {
   const handleChange = (value: string) => {
-    setSelectedValue(value);
+    onChange(value);
   };
   return (
     <RadioGroup
@@ -15,12 +16,16 @@ export const CheckBoxFilter = () => {
       className="flex flex-row mb-5"
     >
       <div className="flex  items-center space-x-2">
-        <RadioGroupItem value="option-one" id="option-one" />
-        <Label htmlFor="15">15</Label>
+        <RadioGroupItem value="15" id="option-one" />
+        <Label htmlFor="option-one">15</Label>
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="30" id="option-two" />
         <Label htmlFor="option-two">30</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="0" id="option-two" />
+        <Label htmlFor="option-two">Todos</Label>
       </div>
     </RadioGroup>
   );

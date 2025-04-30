@@ -10,6 +10,7 @@ interface IClientsParams {
   page: number;
   pageLimit: number;
   search: string;
+  payDay?: string;
 }
 
 interface ICreatePaymentData {
@@ -65,9 +66,10 @@ export const getAllClients = async ({
   page,
   pageLimit,
   search,
+  payDay,
 }: IClientsParams) => {
   const response = await fetch(
-    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}`,
+    `api/clients?type=clients&page=${page}&pageLimit=${pageLimit}&search=${search}&payDay=${payDay}`,
     {
       method: "GET",
       headers: {
