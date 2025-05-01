@@ -30,92 +30,115 @@ export async function getClientsImplementation(data: IGetClients) {
   const page = data.page ?? 1;
   const pageLimit = data.pageLimit ?? 10;
 
-  // validate date
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const endOfMonth = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    0,
-    23,
-    59,
-    59
-  );
-
-  let dateFilter;
-  // validate day of payment
-  if (payDay === 15) {
-    //day 15
-    dateFilter = {
-      gte: startOfMonth,
-      lte: new Date(now.getFullYear(), now.getMonth(), 15, 23, 59, 59),
-    };
-  } else if (payDay === endOfMonth.getDate()) {
-    //last day of month
-    dateFilter = {
-      gte: new Date(now.getFullYear(), now.getMonth(), 16),
-      lte: endOfMonth,
-    };
-  } else if (payDay === 0) {
-    //all days
-    dateFilter = undefined;
-  }
-
   if (typeParam === "clients") {
-    //search clientes without filter
     const skip = (page - 1) * pageLimit;
-    if (
-      searchParam === "" ||
-      searchParam === undefined ||
-      searchParam === null
-    ) {
-      const clients = await prisma.clients.findMany({
-        skip,
-        take: pageLimit,
+
+    // Basis of the WHERE condition for all cases
+    const whereCondition: Prisma.ClientsWhereInput = {
+      zone: employeeZone,
+    };
+
+    // Apply payday filters
+    if (payDay === 15 || payDay === 30) {
+      const allClients = await prisma.clients.findMany({
         where: {
           zone: employeeZone,
-          payment_date: dateFilter,
         },
-
         include: {
           contracts: true,
           payments: true,
           ip_address: true,
         },
       });
+
+      // Filter by payday
+      let filteredClients = allClients;
+      if (payDay === 15) {
+        filteredClients = allClients.filter((client) => {
+          const paymentDay = client.payment_date.getDate();
+          return paymentDay <= 15;
+        });
+      } else if (payDay === 30) {
+        filteredClients = allClients.filter((client) => {
+          const paymentDay = client.payment_date.getDate();
+          return paymentDay >= 16;
+        });
+      }
+
+      // Apply search filter if it exists
+      if (searchParam && searchParam !== "") {
+        filteredClients = filteredClients.filter((client) => {
+          const nameMatch = client.name
+            .toLowerCase()
+            .includes(searchParam.toLowerCase());
+          const lastNameMatch = client.last_name
+            .toLowerCase()
+            .includes(searchParam.toLowerCase());
+          return nameMatch || lastNameMatch;
+        });
+      }
+
+      // Apply memory paging
+      const paginatedClients = filteredClients.slice(skip, skip + pageLimit);
+
+      if (paginatedClients.length === 0) {
+        return NextResponse.json(
+          { data: "No se encontraron registros" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({ data: paginatedClients }, { status: 200 });
+    } else {
+      // If payDay is 0 or does not exist, normal query using Prisma
+      if (
+        searchParam === "" ||
+        searchParam === undefined ||
+        searchParam === null
+      ) {
+        const clients = await prisma.clients.findMany({
+          skip,
+          take: pageLimit,
+          where: whereCondition,
+          include: {
+            contracts: true,
+            payments: true,
+            ip_address: true,
+          },
+        });
+        return NextResponse.json({ data: clients }, { status: 200 });
+      }
+
+      //search clients with filter
+      const clients = await prisma.clients.findMany({
+        skip,
+        take: pageLimit,
+        where: {
+          AND: [
+            { zone: employeeZone },
+            {
+              OR: [
+                { name: { contains: searchParam || undefined } },
+                { last_name: { contains: searchParam || undefined } },
+              ],
+            },
+          ],
+        },
+        include: {
+          contracts: true,
+          payments: true,
+          ip_address: true,
+        },
+      });
+
+      if (clients.length === 0) {
+        return NextResponse.json(
+          { data: "No se encontraron registros" },
+          { status: 404 }
+        );
+      }
+
       return NextResponse.json({ data: clients }, { status: 200 });
     }
-
-    //search clients with filter
-    const clients = await prisma.clients.findMany({
-      skip,
-      take: pageLimit,
-      where: {
-        AND: [
-          { zone: employeeZone, payment_date: dateFilter },
-          {
-            OR: [
-              { name: { contains: searchParam || undefined } },
-              { last_name: { contains: searchParam || undefined } },
-            ],
-          },
-        ],
-      },
-      include: {
-        contracts: true,
-        payments: true,
-        ip_address: true,
-      },
-    });
-
-    if (clients.length === 0) {
-      return NextResponse.json(
-        { data: "No se encontro registros" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ data: clients }, { status: 200 });
   }
   return NextResponse.json("error", { status: 400 });
 }

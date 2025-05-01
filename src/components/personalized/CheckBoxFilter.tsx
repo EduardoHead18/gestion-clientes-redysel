@@ -25,7 +25,7 @@ export const CheckBoxFilter = ({ onChange }: CheckBoxFilterProps) => {
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="0" id="option-two" />
-        <Label htmlFor="option-two">Todos</Label>
+        <Label htmlFor="option-three">Todos</Label>
       </div>
     </RadioGroup>
   );
