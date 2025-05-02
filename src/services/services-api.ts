@@ -12,6 +12,11 @@ interface IClientsParams {
   search: string;
   payDay?: string;
 }
+interface IGetIpAddressParams {
+  page: number;
+  pageLimit: number;
+  search?: string;
+}
 
 interface ICreatePaymentData {
   clients_id: number;
@@ -77,8 +82,8 @@ export const getAllClients = async ({
       },
     }
   );
-  const responseJson: { data: IClients } = await response.json();
-  return responseJson.data;
+  const responseJson = await response.json();
+  return { status: response.status, data: responseJson.data };
 };
 
 export const createClient = async (data: IClients) => {
@@ -169,8 +174,13 @@ export const deleteTemporaryClient = async (id: number) => {
 };
 
 // IP-ADDRESS API
-export const getAllIpAdress = async () => {
-  const response = await fetch("/api/ip-address");
+export const getAllIpAdress = async ({
+  page,
+  pageLimit,
+}: IGetIpAddressParams) => {
+  const response = await fetch(
+    `/api/ip-address?page=${page}&pageLimit=${pageLimit}`
+  );
   const responseJson = await response.json();
   return { status: response.status, data: responseJson.data };
 };

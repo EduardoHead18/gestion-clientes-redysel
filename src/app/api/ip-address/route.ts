@@ -6,9 +6,18 @@ import {
   getAllIpAdressImpl,
 } from "../implementation/ip-address-implementation";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const result = await getAllIpAdressImpl();
+    const { searchParams } = req.nextUrl;
+
+    //get all params for the filter and pagination
+    const dataObjectTransfer = {
+      typeParam: searchParams.get("type"),
+      searchParam: searchParams.get("search"),
+      page: parseInt(searchParams.get("page") || "1", 10),
+      pageLimit: parseInt(searchParams.get("pageLimit") || "10", 10),
+    };
+    const result = await getAllIpAdressImpl(dataObjectTransfer);
     return result;
   } catch {
     return NextResponse.json(

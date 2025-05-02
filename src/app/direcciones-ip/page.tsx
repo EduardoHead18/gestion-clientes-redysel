@@ -8,19 +8,27 @@ import { useEffect, useState } from "react";
 import { getAllIpAdress } from "@/services/services-api";
 import { IPadress } from "@/interfaces/interfaces";
 import { columns } from "./colums";
-import { useRefreshIpAdressApi } from "@/hooks/useStore";
+import { useStoreIpAddressPagination } from "@/hooks/useStore";
 
 export default function IpAddressPage() {
   const [dataIpAdress, setDataIpAdress] = useState<IPadress[]>([]);
-  const { refresh } = useRefreshIpAdressApi();
+  const [hasMore, setHasMore] = useState(true);
+  const { page, refresh, increasePage, decreasePage, reset } =
+    useStoreIpAddressPagination();
+
   useEffect(() => {
     const getIpAddress = async () => {
-      const response = await getAllIpAdress();
-      if (response.status === 200) setDataIpAdress(response.data);
-      else setDataIpAdress([]);
+      const response = await getAllIpAdress({ page: page, pageLimit: 20 });
+      if (response.status === 200) {
+        setDataIpAdress(response.data);
+        setHasMore(response.data.length === 20);
+      } else {
+        setDataIpAdress([]);
+        setHasMore(false);
+      }
     };
     getIpAddress();
-  }, [refresh]);
+  }, [refresh, page]);
   return (
     <div className="container mx-auto px-10">
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
@@ -38,7 +46,12 @@ export default function IpAddressPage() {
 
       <div className="flex flex-col md:flex-row w-full">
         <SearchComponent />
-        <PaginationComponent />
+        <PaginationComponent
+          page={page}
+          increasePage={hasMore ? increasePage : undefined}
+          decreasePage={decreasePage}
+          reset={reset}
+        />
       </div>
       <DataTable columns={columns} data={dataIpAdress} />
     </div>

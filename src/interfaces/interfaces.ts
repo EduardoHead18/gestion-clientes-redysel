@@ -53,7 +53,6 @@ export interface IClients {
 export interface IPadress {
   id?: number;
   ip_address: string;
-  status: boolean;
   clients?: IClients;
   createdAt?: string;
 }

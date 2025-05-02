@@ -85,3 +85,15 @@ export const useRefreshIpAdressApi = create<IRefreshIpAdressApi>((set) => ({
   refresh: false,
   refreshFunction: () => set((state) => ({ refresh: !state.refresh })),
 }));
+
+export const useStoreIpAddressPagination = create<IPagination>((set) => ({
+  page: 1,
+  refresh: false,
+  increasePage: () => set((state) => ({ page: state.page + 1 })),
+  decreasePage: () =>
+    set((state) => ({
+      page: state.page > 1 ? state.page - 1 : 1,
+    })),
+  reset: () => set({ page: 1 }),
+  refreshFunction: () => set((state) => ({ refresh: !state.refresh })),
+}));

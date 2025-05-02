@@ -13,14 +13,14 @@ import {
 } from "@/hooks/useStore";
 import { useRouter } from "next/navigation";
 import { CheckBoxFilter } from "@/components/personalized/CheckBoxFilter";
-//TODO: Prevent page changes if the page size is not greater than 20 data.
 export default function ClientsPage() {
   const [payDay, setPayDay] = useState<string>("0");
   const [clients, setClients] = useState<IClients[]>([]);
-  const router = useRouter();
-  const { page } = useStorePagination();
+  const [hasMore, setHasMore] = useState(true);
+  const { page, increasePage, decreasePage, reset } = useStorePagination();
   const { refreshClient } = useRefreshClientComponent();
   const { search } = useStoreSearch();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,8 +31,13 @@ export default function ClientsPage() {
           search: search,
           payDay: payDay,
         });
-        if (!Array.isArray(response)) setClients([]);
-        else setClients(response);
+        if (response.status === 200) {
+          setClients(response.data);
+          setHasMore(response.data.length === 20);
+        } else {
+          setClients([]);
+          setHasMore(false);
+        }
       } catch (error) {
         console.error("error:", error);
       }
@@ -56,7 +61,12 @@ export default function ClientsPage() {
       <div className="flex flex-col gap-10 md:flex-row w-full">
         <SearchComponent />
         <CheckBoxFilter onChange={(value) => setPayDay(value)} />
-        <PaginationComponent />
+        <PaginationComponent
+          page={page}
+          increasePage={hasMore ? increasePage : undefined}
+          decreasePage={decreasePage}
+          reset={reset}
+        />
       </div>
       <DataTable columns={columns} data={clients} />
     </div>

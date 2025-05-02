@@ -18,14 +18,13 @@ export default function RegistrarIpAdressPage() {
 
   const handleSubmmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!segmentoIp) return 
+    if (!segmentoIp) return;
     onSubmit({ ipAddress: `${segmentoIp}` });
   };
 
   const onSubmit = async (data: IPadress) => {
     const dataObject = {
       ip_address: data.ipAddress,
-      status: true,
     };
     try {
       const response = await createIpAddress(dataObject);
@@ -46,7 +45,7 @@ export default function RegistrarIpAdressPage() {
     <div className="flex flex-col items-center  min-h-screen">
       <div className=" p-10 rounded-lg shadow-sm w-full max-w-2xl ">
         <h1 className="text-center lg:text-2xl font-bold mb-10">
-          Registrar Segmento Dirección IP
+          Registrar Segmento de Dirección IP
         </h1>
         <form onSubmit={handleSubmmit}>
           <div className="">
