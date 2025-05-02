@@ -11,14 +11,16 @@ import Link from "next/link";
 import {
   useStoreSearch,
   useStoreClientsTemporaryPagination,
+  useRefreshTemporaryClientComponent,
 } from "@/hooks/useStore";
 
 export default function ClientesTemporalesPage() {
   const [clients, setClients] = useState<ITemporaryClient[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const { search } = useStoreSearch();
-  const { refresh, increasePage, decreasePage, reset, page } =
+  const { increasePage, decreasePage, reset, page } =
     useStoreClientsTemporaryPagination();
+  const { refreshTemporaryClient } = useRefreshTemporaryClientComponent();
 
   const getAllClientsTemp = async () => {
     try {
@@ -40,7 +42,7 @@ export default function ClientesTemporalesPage() {
   };
   useEffect(() => {
     getAllClientsTemp();
-  }, [page, search, refresh]);
+  }, [page, search, refreshTemporaryClient]);
   return (
     <div className="container mx-auto px-10 fade-in">
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">

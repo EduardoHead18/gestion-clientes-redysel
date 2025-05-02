@@ -11,6 +11,7 @@ import {
   updateIpAddressService,
 } from "@/services/services-api";
 
+// function to delete a temporary client
 const deleteClientTemp = async (clientId: number) => {
   try {
     await deleteTemporaryClient(clientId);
@@ -22,7 +23,8 @@ const deleteClientTemp = async (clientId: number) => {
 interface IPadressWithStatus extends IPadress {
   status: boolean;
 }
-const getIpAddressFunc = async () => {
+// function to get the ip address active
+const getIpAdressActive = async () => {
   const response = await fetch("/api/ip-address");
   const responseJson = await response.json();
 
@@ -39,9 +41,9 @@ const getIpAddressFunc = async () => {
     ipAddress: ipAddress,
   };
 };
-
-const updateAddressFunc = async () => {
-  const responseAddress = await getIpAddressFunc();
+// functio to update the status of the ip address to false
+const updateStatusIpAddress = async () => {
+  const responseAddress = await getIpAdressActive();
   if (!responseAddress)
     return alert("No hay Direcciones IP disponibles, registra una nueva");
   const ipAddressId = responseAddress.id;
@@ -51,7 +53,7 @@ const updateAddressFunc = async () => {
     status: false,
   });
 };
-
+//function to create a client and contract
 const createClientAndContract = async (id: number) => {
   try {
     const response = await getByIdTemporaryClient(id);
@@ -60,7 +62,7 @@ const createClientAndContract = async (id: number) => {
       return;
     }
 
-    const responseAddress = await getIpAddressFunc();
+    const responseAddress = await getIpAdressActive();
     if (!responseAddress)
       return alert("No hay Direcciones IP disponibles, registra una nueva");
     const ipAddressId = responseAddress.id;
@@ -81,7 +83,7 @@ const createClientAndContract = async (id: number) => {
     const result = await createClient(newClient as IClients);
 
     if (result.status === 201) {
-      await updateAddressFunc();
+      await updateStatusIpAddress();
       await deleteTemporaryClient(id);
     }
   } catch (error) {

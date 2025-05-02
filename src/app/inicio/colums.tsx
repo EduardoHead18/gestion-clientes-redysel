@@ -59,6 +59,7 @@ export const columns: ColumnDef<IClients>[] = [
     accessorKey: "name",
     header: "Nombre",
   },
+  { accessorKey: "uuid", header: "UUID" },
   {
     accessorKey: "last_name",
     header: "Apellidos",

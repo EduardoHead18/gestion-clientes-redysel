@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 import { Prisma } from "@prisma/client";
-import { decodeToken } from "../utils/tools";
+import { decodeToken, randomCodeUuid } from "../utils/tools";
 import { getCookie } from "../utils/cookies";
 
 interface IGetClients {
@@ -158,7 +158,10 @@ export async function getClientByIdImplementation(id: number) {
 export async function createClientImplementation(
   data: Prisma.ClientsCreateInput
 ) {
-  const result = await prisma.clients.create({ data });
+  //generate uuid random
+  const uuid = randomCodeUuid();
+  const newDataObject = { ...data, uuid };
+  const result = await prisma.clients.create({ data: newDataObject });
   return NextResponse.json({ data: result }, { status: 201 });
 }
 

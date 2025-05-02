@@ -28,16 +28,6 @@ export function decodeToken(
   }
 }
 
-export const randomCodeUuid = (): number => {
-  const num = 9;
-  const randomCode: number[] = [];
-
-  for (let i = 0; i < 4; i++) {
-    const randomTemp = Math.floor(Math.random() * num);
-    randomCode.push(randomTemp);
-  }
-  const codeString: string = randomCode.join("");
-  const codeNumber: number = parseInt(codeString, 10);
-  return codeNumber;
+export const randomCodeUuid = (): string => {
+  return Math.floor(1000 + Math.random() * 9000).toString();
 };
-
