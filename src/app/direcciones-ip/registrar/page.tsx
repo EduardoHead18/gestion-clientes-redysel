@@ -28,7 +28,7 @@ export default function RegistrarIpAdressPage() {
     };
     try {
       const response = await createIpAddress(dataObject);
-      if (response.status === 200) {
+      if (response.status === 201) {
         route.push("/direcciones-ip");
       } else if (response.status == 409) {
         setErrorBadge(true);
