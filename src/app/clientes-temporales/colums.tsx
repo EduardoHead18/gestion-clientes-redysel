@@ -7,7 +7,6 @@ import DropMenuTempClient from "@/components/personalized/DropMenus/DropMenuTemp
 import {
   createClient,
   deleteTemporaryClient,
-  getAllIpAdress,
   getByIdTemporaryClient,
   updateIpAddressService,
 } from "@/services/services-api";
@@ -20,16 +19,21 @@ const deleteClientTemp = async (clientId: number) => {
   }
 };
 
+interface IPadressWithStatus extends IPadress {
+  status: boolean;
+}
 const getIpAddressFunc = async () => {
-  //get ip-address
-  const response = await getAllIpAdress();
-  const responseMap = response.data.find(
-    (data: IPadress) => data.status === true
+  const response = await fetch("/api/ip-address");
+  const responseJson = await response.json();
+
+  const responseMap = responseJson.data.find(
+    (data: IPadressWithStatus) => data.status === true
   );
+
   if (!responseMap) return;
   const ipAddress = responseMap.ip_address;
   const ipAddressId = responseMap.id;
-  //update to false ip-address
+
   return {
     id: ipAddressId,
     ipAddress: ipAddress,

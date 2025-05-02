@@ -34,7 +34,6 @@ export default function ClientsTemporaryPage() {
   const onSubmit = async (data: ITemporaryClient) => {
     const sendData = {
       ...data,
-      payment_date: new Date().toISOString(),
     };
     const response = await createTemporaryClient(sendData);
     if (response?.status === 201) {
