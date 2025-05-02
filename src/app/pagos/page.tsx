@@ -42,7 +42,7 @@ export default function PagosPage() {
   }, [page, search, refreshClient]);
 
   return (
-    <div className="container mx-auto px-10">
+    <div className="container mx-auto px-10 fade-in">
       <div className="flex flex-col justify-end mb-4">
         <div className="flex md:flex-row items-end justify-between">
           <h1 className="md:text-2xl font-semibold mb-5">Pagos</h1>

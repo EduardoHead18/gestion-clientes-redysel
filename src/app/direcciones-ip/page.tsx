@@ -30,7 +30,7 @@ export default function IpAddressPage() {
     getIpAddress();
   }, [refresh, page]);
   return (
-    <div className="container mx-auto px-10">
+    <div className="container mx-auto px-10 fade-in">
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold mb-5">Direcciones IP</h1>
         <div className="flex items-center mb-5">

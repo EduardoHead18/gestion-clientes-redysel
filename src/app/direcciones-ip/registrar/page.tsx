@@ -42,7 +42,7 @@ export default function RegistrarIpAdressPage() {
   };
 
   return (
-    <div className="flex flex-col items-center  min-h-screen">
+    <div className="flex flex-col items-center  min-h-screen fade-in">
       <div className=" p-10 rounded-lg shadow-sm w-full max-w-2xl ">
         <h1 className="text-center lg:text-2xl font-bold mb-10">
           Registrar Segmento de Dirección IP
