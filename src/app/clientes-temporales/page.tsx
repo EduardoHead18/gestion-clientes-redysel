@@ -9,16 +9,16 @@ import { getAllTemporaryClients } from "@/services/services-api";
 import { ITemporaryClient } from "@/interfaces/interfaces";
 import Link from "next/link";
 import {
-  useStorePagination,
   useStoreSearch,
-  useRefreshTemporaryClientComponent,
+  useStoreClientsTemporaryPagination,
 } from "@/hooks/useStore";
 
 export default function ClientesTemporalesPage() {
   const [clients, setClients] = useState<ITemporaryClient[]>([]);
-  const { page, refresh } = useStorePagination();
+  const [hasMore, setHasMore] = useState(true);
   const { search } = useStoreSearch();
-  const { refreshTemporaryClient } = useRefreshTemporaryClientComponent();
+  const { refresh, increasePage, decreasePage, reset, page } =
+    useStoreClientsTemporaryPagination();
 
   const getAllClientsTemp = async () => {
     try {
@@ -27,15 +27,20 @@ export default function ClientesTemporalesPage() {
         pageLimit: 20,
         search: search,
       });
-      if (response.status === 200) setClients(response.data);
-      else setClients([]);
+      if (response.status === 200) {
+        setClients(response.data);
+        setHasMore(response.data.length === 20);
+      } else {
+        setClients([]);
+        setHasMore(false);
+      }
     } catch (error) {
       console.error("error:", error);
     }
   };
   useEffect(() => {
     getAllClientsTemp();
-  }, [page, search, refresh, refreshTemporaryClient]);
+  }, [page, search, refresh]);
   return (
     <div className="container mx-auto px-10">
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
@@ -53,7 +58,12 @@ export default function ClientesTemporalesPage() {
 
       <div className="flex flex-col md:flex-row w-full">
         <SearchComponent />
-        <PaginationComponent />
+        <PaginationComponent
+          page={page}
+          increasePage={hasMore ? increasePage : undefined}
+          decreasePage={decreasePage}
+          reset={reset}
+        />
       </div>
       <DataTable columns={columns} data={clients} />
     </div>
