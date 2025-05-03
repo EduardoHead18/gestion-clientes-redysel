@@ -95,7 +95,7 @@ export const createClient = async (data: IClients) => {
     body: JSON.stringify(data),
   });
   const respondeJson = await response.json();
-  return { status: response.status, data: respondeJson };
+  return { status: response.status, data: respondeJson.data };
 };
 
 export const deleteClient = async (id: number) => {
@@ -181,6 +181,12 @@ export const getAllIpAdress = async ({
   const response = await fetch(
     `/api/ip-address?page=${page}&pageLimit=${pageLimit}`
   );
+  const responseJson = await response.json();
+  return { status: response.status, data: responseJson.data };
+};
+
+export const getAllActiveIpAdressesService = async () => {
+  const response = await fetch("/api/ip-address/all-active-ip-addresses");
   const responseJson = await response.json();
   return { status: response.status, data: responseJson.data };
 };

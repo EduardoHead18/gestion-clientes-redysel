@@ -1,12 +1,14 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { IClients, IPadress, ITemporaryClient } from "@/interfaces/interfaces";
-import { dateFormat } from "@/utils/tools";
+import { IClients, ITemporaryClient } from "@/interfaces/interfaces";
+import { currentDate, dateFormat } from "@/utils/tools";
 import DropMenuTempClient from "@/components/personalized/DropMenus/DropMenuTempClients";
 import {
   createClient,
+  createPaymentService,
   deleteTemporaryClient,
+  getAllActiveIpAdressesService,
   getByIdTemporaryClient,
   updateIpAddressService,
 } from "@/services/services-api";
@@ -20,39 +22,42 @@ const deleteClientTemp = async (clientId: number) => {
   }
 };
 
-interface IPadressWithStatus extends IPadress {
-  status: boolean;
-}
 // function to get the ip address active
 const getIpAdressActive = async () => {
-  const response = await fetch("/api/ip-address");
-  const responseJson = await response.json();
+  try {
+    const response = await getAllActiveIpAdressesService();
+    console.log("respuesta del servidor", response);
 
-  const responseMap = responseJson.data.find(
-    (data: IPadressWithStatus) => data.status === true
-  );
+    if (!response)
+      return alert("No hay Direcciones IP disponibles, registra una nueva");
+    const ipAddress = response.data[0].ip_address;
+    const ipAddressId = response.data[0].id;
 
-  if (!responseMap) return;
-  const ipAddress = responseMap.ip_address;
-  const ipAddressId = responseMap.id;
-
-  return {
-    id: ipAddressId,
-    ipAddress: ipAddress,
-  };
+    return {
+      id: ipAddressId,
+      ipAddress: ipAddress,
+    };
+  } catch {
+    return alert("Error en el servirdor: getIpAdressActive");
+  }
 };
 // functio to update the status of the ip address to false
 const updateStatusIpAddress = async () => {
-  const responseAddress = await getIpAdressActive();
-  if (!responseAddress)
-    return alert("No hay Direcciones IP disponibles, registra una nueva");
-  const ipAddressId = responseAddress.id;
+  try {
+    const responseAddress = await getIpAdressActive();
+    if (!responseAddress)
+      return alert("No hay Direcciones IP disponibles, registra una nueva");
+    const ipAddressId = responseAddress.id;
 
-  await updateIpAddressService({
-    id: ipAddressId,
-    status: false,
-  });
+    await updateIpAddressService({
+      id: ipAddressId,
+      status: false,
+    });
+  } catch {
+    return alert("Error en el servirdor: updateStatusIpAddress");
+  }
 };
+
 //function to create a client and contract
 const createClientAndContract = async (id: number) => {
   try {
@@ -81,13 +86,25 @@ const createClientAndContract = async (id: number) => {
     };
 
     const result = await createClient(newClient as IClients);
-
     if (result.status === 201) {
       await updateStatusIpAddress();
       await deleteTemporaryClient(id);
+      await createTheFirstPayment(result.data.id);
     }
   } catch (error) {
     console.error("Error:", error);
+  }
+};
+// create the first payment
+const createTheFirstPayment = async (clientId: number) => {
+  const dateNow = currentDate();
+  try {
+    await createPaymentService({
+      clients_id: clientId,
+      payment_date: dateNow,
+    });
+  } catch {
+    alert("Error al crear el primer pago");
   }
 };
 

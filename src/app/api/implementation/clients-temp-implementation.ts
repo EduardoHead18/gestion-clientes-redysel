@@ -80,7 +80,8 @@ export async function createClientTempImplementation(
 ) {
   //getCookie token
   const cookie = await getCookie();
-
+  //adjust to the current date
+  const localDate = adjustToLocalTime(new Date());
   const decodeTokenFunc = decodeToken(cookie!);
   let employeeZone = "";
 
@@ -90,7 +91,11 @@ export async function createClientTempImplementation(
   } else if ("zone" in decodeTokenFunc) {
     employeeZone = decodeTokenFunc.zone;
   }
-  const newClientObject = { ...data, zone: employeeZone };
+  const newClientObject = {
+    ...data,
+    zone: employeeZone,
+    payment_date: localDate,
+  };
   const result = await prisma.temporaryClients.create({
     data: newClientObject,
   });
@@ -152,4 +157,9 @@ export async function getByIdTemporaryClientImp(id: number) {
     );
 
   return NextResponse.json({ data: result }, { status: 200 });
+}
+
+function adjustToLocalTime(date: Date): Date {
+  const offset = date.getTimezoneOffset();
+  return new Date(date.getTime() - offset * 60 * 1000);
 }

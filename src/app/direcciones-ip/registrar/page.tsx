@@ -18,7 +18,10 @@ export default function RegistrarIpAdressPage() {
 
   const handleSubmmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!segmentoIp) return;
+    if (!segmentoIp) {
+      setErrorBadge(true);
+      return setErrorMessage("Agrega un segmento de IP");
+    }
     onSubmit({ ipAddress: `${segmentoIp}` });
   };
 
