@@ -26,8 +26,6 @@ const deleteClientTemp = async (clientId: number) => {
 const getIpAdressActive = async () => {
   try {
     const response = await getAllActiveIpAdressesService();
-    console.log("respuesta del servidor", response);
-
     if (!response)
       return alert("No hay Direcciones IP disponibles, registra una nueva");
     const ipAddress = response.data[0].ip_address;
