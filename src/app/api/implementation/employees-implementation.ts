@@ -9,9 +9,19 @@ export async function getAllEmployeeImpl() {
 }
 
 export async function createEmployeeImpl(data: Prisma.EmployeesCreateInput) {
+  type typeRoles = "admi" | "empleado";
   const { name, last_name, zone, role, email, password } = data;
 
   const passwordEncrypted = await bcrypt.hash(password, 10);
+  //validate role
+  const normalizedRole = role.toLowerCase();
+  const validRoles: typeRoles[] = ["admi", "empleado"];
+  if (!validRoles.includes(normalizedRole as typeRoles)) {
+    return NextResponse.json(
+      { message: "El rol no es adecuado" },
+      { status: 400 }
+    );
+  }
 
   const findUser = await prisma.employees.findUnique({
     where: {
