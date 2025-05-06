@@ -36,7 +36,7 @@ const getIpAdressActive = async () => {
       ipAddress: ipAddress,
     };
   } catch {
-    return alert("Error en el servirdor: getIpAdressActive");
+    console.error("error en el servidor");
   }
 };
 // functio to update the status of the ip address to false
