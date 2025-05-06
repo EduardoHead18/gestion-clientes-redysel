@@ -17,7 +17,7 @@ export interface IPayments {
   id: number;
   clientsId: IClients[];
   employeeId: IEmployee[];
-  paymentDate: string;
+  payment_date: string;
   createdAt?: string;
 }
 

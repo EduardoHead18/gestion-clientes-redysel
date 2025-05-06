@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { IClients } from "../../interfaces/interfaces";
-import { currentDate, dateFormat, validateObject } from "../../utils/tools";
+import { currentDate, dateFormat } from "../../utils/tools";
 import { BadgeStatus } from "../../components/personalized/BadgeStatus";
 import DropMenuComponent from "../../components/personalized/DropMenus/DropMenuComponent";
 import {
@@ -91,11 +91,22 @@ export const columns: ColumnDef<IClients>[] = [
   {
     accessorKey: "status_payment",
     cell: ({ row }) => {
-      const getPayment = validateObject(row.original.payments);
-      if (!getPayment) {
-        return <BadgeStatus textMessage={"No pagado"} variant="destructive" />;
+      const currentMonth = new Date().getMonth() + 1;
+
+      const payments = Array.isArray(row.original.payments)
+        ? row.original.payments
+        : [];
+
+      // Filter payments that match the current month
+      const paymentsThisMonth = payments.filter((payment) => {
+        const paymentMonth = new Date(payment.payment_date).getMonth() + 1;
+        return paymentMonth === currentMonth;
+      });
+
+      if (paymentsThisMonth.length > 0) {
+        return <BadgeStatus textMessage={"Pagado"} variant="default" />;
       }
-      return <BadgeStatus textMessage={"Pagado"} variant="default" />;
+      return <BadgeStatus textMessage={"No pagado"} variant="destructive" />;
     },
     header: "Estado de pago",
   },
