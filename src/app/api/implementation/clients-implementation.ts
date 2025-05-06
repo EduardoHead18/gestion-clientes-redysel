@@ -6,10 +6,21 @@ import { decodeToken, randomCodeUuid } from "../utils/tools";
 import { getCookie } from "../utils/cookies";
 
 interface IGetClients {
-  typeParam?: string | null;
-  searchParam?: string | null;
+  typeParam?: string;
+  searchParam?: string;
   page?: number;
   pageLimit?: number;
+  payDay?: number;
+}
+
+// type ClientResponse = NextResponse ;
+
+interface IShowClientsParams {
+  typeParam?: string | undefined;
+  searchParam?: string | undefined;
+  employeeZone: string;
+  page: number;
+  pageLimit: number;
   payDay?: number;
 }
 export async function getClientsImplementation(data: IGetClients) {
@@ -17,19 +28,148 @@ export async function getClientsImplementation(data: IGetClients) {
   // Check if the token is valid
   const cookieToken = await getCookie();
   const responseDecodeToken = decodeToken(cookieToken!);
+
   let employeeZone = "";
-  //validate the zone from the token
+  let userRole = "";
+  //validate the zone from the token and get role from the user
   if (typeof responseDecodeToken === "string") {
     console.error("Error decoding token:", responseDecodeToken);
   } else if ("zone" in responseDecodeToken) {
     employeeZone = responseDecodeToken.zone;
+    userRole = responseDecodeToken.role;
   }
+
   if (!responseDecodeToken || typeof responseDecodeToken !== "object") {
     return NextResponse.json({ error: "Token no válido" }, { status: 401 });
   }
   const page = data.page ?? 1;
   const pageLimit = data.pageLimit ?? 10;
 
+  //This feature shows all the customers that exist in the different regions
+  if (userRole === "admi") {
+    const clients = await prisma.clients.findMany({
+      skip: (page - 1) * pageLimit,
+      take: pageLimit,
+      include: {
+        contracts: true,
+        payments: true,
+        ip_address: true,
+      },
+    });
+
+    if (clients.length === 0) {
+      return NextResponse.json(
+        { data: "No se encontraron registros" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ data: clients }, { status: 200 });
+  }
+
+  return showClients({
+    typeParam,
+    searchParam,
+    employeeZone,
+    page,
+    pageLimit,
+    payDay,
+  });
+}
+
+export async function getClientByIdImplementation(id: number) {
+  const result = await prisma.clients.findUnique({
+    where: { id },
+  });
+  if (!result)
+    return NextResponse.json(
+      { message: "Cliente no encontrado" },
+      { status: 404 }
+    );
+  return NextResponse.json({ data: result }, { status: 200 });
+}
+
+export async function createClientImplementation(
+  data: Prisma.ClientsCreateInput
+) {
+  //generate uuid random
+  const uuid = randomCodeUuid();
+  const newDataObject = { ...data, uuid };
+  const result = await prisma.clients.create({ data: newDataObject });
+  return NextResponse.json({ data: result }, { status: 201 });
+}
+
+export async function deleteClientImplementation(id: number) {
+  if (!id) {
+    return NextResponse.json(
+      { message: "Client ID is required" },
+      { status: 400 }
+    );
+  }
+
+  const result = await prisma.clients.findUnique({
+    where: { id },
+  });
+
+  if (!result) {
+    return NextResponse.json(
+      { error: "Cliente no encontrado" },
+      { status: 404 }
+    );
+  }
+
+  await prisma.clients.delete({
+    where: { id },
+  });
+  return NextResponse.json({ message: "Cliente eliminado" }, { status: 200 });
+}
+
+export const updateClient = async (
+  id: number,
+  data: Prisma.ClientsUpdateInput
+) => {
+  try {
+    if (!id || !data) {
+      return NextResponse.json(
+        { error: "Client ID and data are required" },
+        { status: 400 }
+      );
+    }
+
+    const findClient = await prisma.clients.findUnique({
+      where: { id },
+    });
+    if (!findClient)
+      return NextResponse.json(
+        { message: "Cliente no encontrado" },
+        { status: 404 }
+      );
+
+    const updatedClient = await prisma.clients.update({
+      where: { id },
+      data,
+    });
+
+    return NextResponse.json(
+      { message: "Cliente actualizado", client: updatedClient },
+      { status: 200 }
+    );
+  } catch {
+    return NextResponse.json(
+      { error: "Falló al actualizar el cliente" },
+      { status: 500 }
+    );
+  }
+};
+// This function shows customers depending on which zone they are in.
+const showClients = async ({
+  typeParam,
+  searchParam,
+  employeeZone,
+  page,
+  pageLimit,
+  payDay,
+}: IShowClientsParams) => {
   if (typeParam === "clients") {
     const skip = (page - 1) * pageLimit;
 
@@ -136,94 +276,7 @@ export async function getClientsImplementation(data: IGetClients) {
           { status: 404 }
         );
       }
-
       return NextResponse.json({ data: clients }, { status: 200 });
     }
-  }
-  return NextResponse.json("error", { status: 400 });
-}
-
-export async function getClientByIdImplementation(id: number) {
-  const result = await prisma.clients.findUnique({
-    where: { id },
-  });
-  if (!result)
-    return NextResponse.json(
-      { message: "Cliente no encontrado" },
-      { status: 404 }
-    );
-  return NextResponse.json({ data: result }, { status: 200 });
-}
-
-export async function createClientImplementation(
-  data: Prisma.ClientsCreateInput
-) {
-  //generate uuid random
-  const uuid = randomCodeUuid();
-  const newDataObject = { ...data, uuid };
-  const result = await prisma.clients.create({ data: newDataObject });
-  return NextResponse.json({ data: result }, { status: 201 });
-}
-
-export async function deleteClientImplementation(id: number) {
-  if (!id) {
-    return NextResponse.json(
-      { message: "Client ID is required" },
-      { status: 400 }
-    );
-  }
-
-  const result = await prisma.clients.findUnique({
-    where: { id },
-  });
-
-  if (!result) {
-    return NextResponse.json(
-      { error: "Cliente no encontrado" },
-      { status: 404 }
-    );
-  }
-
-  await prisma.clients.delete({
-    where: { id },
-  });
-  return NextResponse.json({ message: "Cliente eliminado" }, { status: 200 });
-}
-
-export const updateClient = async (
-  id: number,
-  data: Prisma.ClientsUpdateInput
-) => {
-  try {
-    if (!id || !data) {
-      return NextResponse.json(
-        { error: "Client ID and data are required" },
-        { status: 400 }
-      );
-    }
-
-    const findClient = await prisma.clients.findUnique({
-      where: { id },
-    });
-    if (!findClient)
-      return NextResponse.json(
-        { message: "Cliente no encontrado" },
-        { status: 404 }
-      );
-
-    const updatedClient = await prisma.clients.update({
-      where: { id },
-      data,
-    });
-
-    return NextResponse.json(
-      { message: "Cliente actualizado", client: updatedClient },
-      { status: 200 }
-    );
-  } catch {
-    return NextResponse.json(
-      { error: "Falló al actualizar el cliente" },
-      { status: 500 }
-    );
   }
 };
