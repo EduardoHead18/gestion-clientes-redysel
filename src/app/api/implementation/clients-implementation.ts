@@ -2,12 +2,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@lib/prisma";
 import { Prisma } from "@prisma/client";
-import { decodeToken, randomCodeUuid } from "../utils/tools";
+import { decodeCookieToken, decodeToken, randomCodeUuid } from "../utils/tools";
 import { getCookie } from "../utils/cookies";
 
 interface IGetClients {
-  typeParam?: string;
-  searchParam?: string;
+  typeParam?: string | null | undefined;
+  searchParam?: string | null | undefined;
   page?: number;
   pageLimit?: number;
   payDay?: number;
@@ -16,8 +16,8 @@ interface IGetClients {
 // type ClientResponse = NextResponse ;
 
 interface IShowClientsParams {
-  typeParam?: string | undefined;
-  searchParam?: string | undefined;
+  typeParam?: string | null | undefined;
+  searchParam?: string | null | undefined;
   employeeZone?: string;
   page: number;
   pageLimit: number;
@@ -81,6 +81,30 @@ export async function getClientByIdImplementation(id: number) {
 export async function createClientImplementation(
   data: Prisma.ClientsCreateInput
 ) {
+  //recover employee zone
+  const employeeZone = await decodeCookieToken();
+  const { ip_address } = data;
+  //search ip zone
+  if (!ip_address?.connect?.id) {
+    return NextResponse.json(
+      { message: "El ID de la dirección IP es requerido" },
+      { status: 400 }
+    );
+  }
+  const findZoneIp = await prisma.ip_address.findUnique({
+    where: { id: ip_address?.connect.id },
+  });
+
+  if (!findZoneIp)
+    return NextResponse.json(
+      { message: "No hay Direcciones IP disponibles, registra una nueva" },
+      { status: 404 }
+    );
+  if (findZoneIp.zone !== employeeZone.employeeZone)
+    return NextResponse.json(
+      { message: "No hay Direcciones IP disponibles, registra una nueva" },
+      { status: 404 }
+    );
   //generate uuid random
   const uuid = randomCodeUuid();
   const newDataObject = { ...data, uuid };

@@ -36,7 +36,7 @@ const getIpAdressActive = async () => {
       ipAddress: ipAddress,
     };
   } catch {
-    console.error("error en el servidor");
+    return null;
   }
 };
 // functio to update the status of the ip address to false
@@ -82,13 +82,14 @@ const createClientAndContract = async (id: number) => {
       payment_date: new Date().toISOString(),
       active: true,
     };
-
     const result = await createClient(newClient as IClients);
     if (result.status === 201) {
       await updateStatusIpAddress();
       await deleteTemporaryClient(id);
       await createTheFirstPayment(result.data.id);
     }
+    if (result.status === 404)
+      return alert("No hay Direcciones IP disponibles, registra una nueva");
   } catch (error) {
     console.error("Error:", error);
   }
