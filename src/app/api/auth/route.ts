@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     if (!findEmployee) {
       return NextResponse.json(
-        { message: "Empleado no encontrado" },
+        { message: "Correo o contraseña incorrecta" },
         { status: 404 }
       );
     }
