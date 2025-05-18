@@ -18,7 +18,7 @@ interface IGetClients {
 interface IShowClientsParams {
   typeParam?: string | undefined;
   searchParam?: string | undefined;
-  employeeZone: string;
+  employeeZone?: string;
   page: number;
   pageLimit: number;
   payDay?: number;
@@ -47,24 +47,13 @@ export async function getClientsImplementation(data: IGetClients) {
 
   //This feature shows all the customers that exist in the different regions
   if (userRole === "admi") {
-    const clients = await prisma.clients.findMany({
-      skip: (page - 1) * pageLimit,
-      take: pageLimit,
-      include: {
-        contracts: true,
-        payments: true,
-        ip_address: true,
-      },
+    return showClients({
+      typeParam,
+      searchParam,
+      page,
+      pageLimit,
+      payDay,
     });
-
-    if (clients.length === 0) {
-      return NextResponse.json(
-        { data: "No se encontraron registros" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ data: clients }, { status: 200 });
   }
 
   return showClients({
@@ -201,7 +190,7 @@ const showClients = async ({
       } else if (payDay === 30) {
         filteredClients = allClients.filter((client) => {
           const paymentDay = client.payment_date.getDate();
-          return paymentDay >= 16;
+          return paymentDay >= 15;
         });
       }
 
